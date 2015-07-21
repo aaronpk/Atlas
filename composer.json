@@ -1,0 +1,22 @@
+{
+  "name": "p3k/Atlas",
+  "description": "Atlas",
+  "keywords": ["p3k", "indieweb", "maps", "geocoding", "timezone"],
+  "license": "Apache 2.0",
+  "type": "project",
+  "require": {
+    "saltybeagle/savant3": "dev-master",
+    "p3k/slim-savant": ">=0.1.0"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "p3k\\": "p3k/"
+    },
+    "files": [
+      "lib/config.php",
+      "lib/helpers.php"
+    ]
+  }
+}
