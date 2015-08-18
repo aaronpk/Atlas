@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "08543114c4fc08343de999396b54476d",
+    "hash": "67cc4cf59f1b61424cfb0b5d47668c2f",
     "packages": [
         {
             "name": "p3k/slim-savant",
