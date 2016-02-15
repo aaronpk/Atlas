@@ -21,7 +21,7 @@
       <div class="right">
         <a href="https://github.com/aaronpk/Atlas">Source Code</a>
       </div>
-      &copy; 2015 by Aaron Parecki
+      &copy; <?= date('Y') ?> by Aaron Parecki
     </footer>
   </body>
 </html>

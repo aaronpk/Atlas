@@ -7,5 +7,6 @@ require 'vendor/autoload.php';
 require 'controllers/main.php';
 require 'controllers/timezone.php';
 require 'controllers/geocode.php';
+require 'controllers/weather.php';
 
 $app->run();

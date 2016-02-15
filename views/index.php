@@ -22,6 +22,16 @@
       <li><a href="/api/geocode?latitude=45.5118&amp;longitude=-122.6433">/api/geocode?latitude=45.5118&amp;longitude=-122.6433</a></li>
     </ul>
 
+  <h2><i class="fa fa-sun-o"></i> Weather</h2>
+
+    <h3>Retrieving the current weather for a lat/lng</h3>
+
+    <ul>
+      <li><a href="/api/weather?latitude=45.5118&amp;longitude=-122.6433">/api/weather?latitude=45.5118&amp;longitude=-122.6433</a></li>
+    </ul>
+
+    <p>Icon names reference the <a href="https://erikflowers.github.io/weather-icons/">weather-icons</a> icon font.</p>
+
   <h2><i class="fa fa-map"></i> Static Maps</h2>
 
     <p><a href="/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&amp;basemap=gray&amp;width=600&amp;height=240&amp;zoom=14">/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&amp;basemap=gray&amp;width=600&amp;height=240&amp;zoom=14</a></p>
