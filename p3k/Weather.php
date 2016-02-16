@@ -2,6 +2,7 @@
 namespace p3k;
 
 use Config;
+use DateTime, DateTimeZone;
 
 class Weather {
   public static function weather_for_location($lat, $lng) {
@@ -39,7 +40,7 @@ class Weather {
           'country' => $loc->country,
           'zip' => $loc->zip
         ];
-        $sunny = self::_sunny($current->display_location->latitude, $current->display_location->longitude);
+        $sunny = self::_sunny($current->display_location->latitude, $current->display_location->longitude, $current->local_tz_long);
       } else {
         $sunny = 'day';
       }
@@ -99,12 +100,21 @@ class Weather {
   }
 
   // Returns "day" or "night" depending on whether the sun is up at the given location
-  private static function _sunny($lat, $lng) {
-    $now = time();
+  private static function _sunny($lat, $lng, $timezone) {
+    // Get the beginning of the current day
+
+    $now = new DateTime();
+    if($timezone) {
+      $now->setTimeZone(new DateTimeZone($timezone));
+    }
+    $now->setTime(0,0,0);
+    $now = $now->format('U');
+
     if($lat !== null) {
       $sunrise = date_sunrise($now, SUNFUNCS_RET_TIMESTAMP, $lat, $lng, 96);
-      $sunset = date_sunset($now, SUNFUNCS_RET_TIMESTAMP, $lat, $lng, 96);
-      if($sunrise < $now && $sunset > $now) {
+      $sunset = date_sunset($now, SUNFUNCS_RET_TIMESTAMP, $lat, $lng, 92);
+
+      if($sunrise < time() && time() < $sunset) {
         return 'day';
       } else {
         return 'night';
