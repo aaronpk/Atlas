@@ -8,8 +8,11 @@ class Result {
   private $_now;
   private $_name;
 
-  public function __construct($timezone) {
-    $this->_now = new DateTime();
+  public function __construct($timezone, $date=false) {
+    if($date)
+      $this->_now = new DateTime($date);
+    else
+      $this->_now = new DateTime();
     $this->_now->setTimeZone(new DateTimeZone($timezone));
     $this->_name = $timezone;
   }
