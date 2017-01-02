@@ -161,9 +161,11 @@ function generate($params, $filename, $assetPath) {
   } else {
 
     // start at max zoom level (20)
-    $fitZoom = 20;
+    $fitZoom = 21;
     $doesNotFit = true;
     while($fitZoom > 1 && $doesNotFit) {
+      $fitZoom--;
+
       $center = webmercator\latLngToPixels($latitude, $longitude, $fitZoom);
 
       $leftEdge = $center['x'] - $width/2;
@@ -173,14 +175,13 @@ function generate($params, $filename, $assetPath) {
       $sw = webmercator\latLngToPixels($bounds['minLat'], $bounds['minLng'], $fitZoom);
       $ne = webmercator\latLngToPixels($bounds['maxLat'], $bounds['maxLng'], $fitZoom);
 
-      $fitHeight = abs($ne['y'] - $sw['y']);
-      $fitWidth = abs($ne['x'] - $sw['x']);
+      // leave some padding around the objects
+      $fitHeight = abs($ne['y'] - $sw['y']) + (0.1 * $height);
+      $fitWidth = abs($ne['x'] - $sw['x']) + (0.1 * $width);
 
       if($fitHeight <= $height && $fitWidth <= $width) {
         $doesNotFit = false;
       }
-
-      $fitZoom--;
     }
 
     $zoom = $fitZoom;
@@ -193,7 +194,6 @@ function generate($params, $filename, $assetPath) {
   $minZoom = 2;
   if($zoom < $minZoom)
     $zoom = $minZoom;
-
 
   $tileServices = array(
     'streets' => array(
