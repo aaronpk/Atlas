@@ -400,20 +400,76 @@ function generate($params, $filename, $assetPath) {
 
       $draw->setStrokeColor(new ImagickPixel('#'.$path['color']));
       $draw->setStrokeWidth($path['weight']);
+      $draw->setFillOpacity(1);
+      $draw->setStrokeLineCap(Imagick::LINECAP_ROUND);
+      $draw->setStrokeLineJoin(Imagick::LINEJOIN_ROUND);
 
       $previous = false;
       foreach($path['path'] as $point) {
         if($previous) {
           $from = webmercator\latLngToPixels($previous[1], $previous[0], $zoom);
           $to = webmercator\latLngToPixels($point[1], $point[0], $zoom);
-          $draw->line($from['x'] - $leftEdge,$from['y']-$topEdge, $to['x']-$leftEdge,$to['y']-$topEdge);
+
+          if(k($params, 'bezier')) {
+
+            $x_dist = abs($from['x'] - $to['x']);
+            $y_dist = abs($from['y'] - $to['y']);
+
+            // If the X distance is longer than Y distance, draw from left to right
+            if($x_dist > $y_dist) {
+              // Draw from left to right
+              if($from['x'] > $to['x']) {
+                $tmpFrom = $from;
+                $tmpTo = $to;
+                $from = $tmpTo;
+                $to = $tmpFrom;
+                unset($tmp);
+              }
+            } else {
+              // Draw from top to bottom
+              if($from['y'] > $to['y']) {
+                $tmpFrom = $from;
+                $tmpTo = $to;
+                $from = $tmpTo;
+                $to = $tmpFrom;
+                unset($tmp);
+              }
+            }
+
+            $angle = 1 * k($params, 'bezier');
+
+            // Midpoint between the two ends
+            $A = [
+              'x' => ($from['x'] + $to['x']) / 2,
+              'y' => ($from['y'] + $to['y']) / 2
+            ];
+
+            // Derived from http://math.stackexchange.com/a/383648 and http://www.wolframalpha.com/input/?i=triangle+%5B1,1%5D+%5B5,2%5D+%5B1-1%2Fsqrt(3),1%2B4%2Fsqrt(3)%5D
+
+            $B = $from;
+
+            $C = [
+              'x' => ($A['x']) - (($B['y']-$A['y']) * tan(deg2rad($angle))),
+              'y' => ($A['y']) + (($B['x']-$A['x']) * tan(deg2rad($angle)))
+            ];
+
+            $draw->pathStart();
+            $draw->pathMoveToAbsolute($from['x']-$leftEdge,$from['y']-$topEdge);
+            $draw->pathCurveToQuadraticBezierAbsolute(
+              $C['x']-$leftEdge, $C['y']-$topEdge,
+              $to['x']-$leftEdge, $to['y']-$topEdge
+            );
+            $draw->pathFinish();
+          } else {
+            $draw->line($from['x']-$leftEdge,$from['y']-$topEdge, $to['x']-$leftEdge,$to['y']-$topEdge);
+          }
         }
         $previous = $point;
       }
     }
 
     $mg->drawImage($draw);
-    $mg->setImageFormat( "png" );
+    $mg->setImageFormat("png");
 
     $pathImg = imagecreatefromstring($mg);
     imagecopy($im, $pathImg, 0,0, 0,0, $width,$height);
