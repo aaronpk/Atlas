@@ -190,6 +190,9 @@ function generate($params, $filename, $assetPath) {
     $zoom = k($params,'maxzoom');
   }
 
+  $minZoom = 2;
+  if($zoom < $minZoom)
+    $zoom = $minZoom;
 
 
   $tileServices = array(
