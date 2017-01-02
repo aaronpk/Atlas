@@ -439,25 +439,28 @@ function generate($params, $filename, $assetPath) {
             $angle = 1 * k($params, 'bezier');
 
             // Midpoint between the two ends
-            $A = [
+            $M = [
               'x' => ($from['x'] + $to['x']) / 2,
               'y' => ($from['y'] + $to['y']) / 2
             ];
 
             // Derived from http://math.stackexchange.com/a/383648 and http://www.wolframalpha.com/input/?i=triangle+%5B1,1%5D+%5B5,2%5D+%5B1-1%2Fsqrt(3),1%2B4%2Fsqrt(3)%5D
 
-            $B = $from;
+            // See  for details
 
-            $C = [
-              'x' => ($A['x']) - (($B['y']-$A['y']) * tan(deg2rad($angle))),
-              'y' => ($A['y']) + (($B['x']-$A['x']) * tan(deg2rad($angle)))
+            $A = $from;
+            $B = $to;
+
+            $P = [
+              'x' => ($M['x']) - (($A['y']-$M['y']) * tan(deg2rad($angle))),
+              'y' => ($M['y']) + (($A['x']-$M['x']) * tan(deg2rad($angle)))
             ];
 
             $draw->pathStart();
-            $draw->pathMoveToAbsolute($from['x']-$leftEdge,$from['y']-$topEdge);
+            $draw->pathMoveToAbsolute($A['x']-$leftEdge,$A['y']-$topEdge);
             $draw->pathCurveToQuadraticBezierAbsolute(
-              $C['x']-$leftEdge, $C['y']-$topEdge,
-              $to['x']-$leftEdge, $to['y']-$topEdge
+              $P['x']-$leftEdge, $P['y']-$topEdge,
+              $B['x']-$leftEdge, $B['y']-$topEdge
             );
             $draw->pathFinish();
           } else {
