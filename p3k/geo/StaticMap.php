@@ -400,7 +400,7 @@ function generate($params, $filename, $assetPath) {
 
       $draw->setStrokeColor(new ImagickPixel('#'.$path['color']));
       $draw->setStrokeWidth($path['weight']);
-      $draw->setFillOpacity(1);
+      $draw->setFillOpacity(0);
       $draw->setStrokeLineCap(Imagick::LINECAP_ROUND);
       $draw->setStrokeLineJoin(Imagick::LINEJOIN_ROUND);
 
