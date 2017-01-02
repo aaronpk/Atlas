@@ -20,6 +20,7 @@
 
     <ul>
       <li><a href="/api/geocode?latitude=45.5118&amp;longitude=-122.6433">/api/geocode?latitude=45.5118&amp;longitude=-122.6433</a></li>
+      <li><a href="/api/geocode?latitude=45.5118&amp;longitude=-122.6433&date=2016-07-12T09:00:00Z">/api/geocode?latitude=45.5118&amp;longitude=-122.6433&date=2016-07-012T09:00:00Z</a> and return the local time of the given timestamp</li>
     </ul>
 
   <h2><i class="fa fa-sun-o"></i> Weather</h2>

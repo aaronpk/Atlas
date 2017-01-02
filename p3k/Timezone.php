@@ -3,7 +3,7 @@ namespace p3k;
 
 class Timezone {
 
-  public static function timezone_for_location($lat, $lng) {
+  public static function timezone_for_location($lat, $lng, $date=false) {
     $start = microtime(true);
 
     $tzfile = self::tz_data();
@@ -31,7 +31,7 @@ class Timezone {
     // echo "Sorted in " . ((microtime(true)-$start)*1000). "ms\n";
 
     if(count($timezones) > 0)
-      return new timezone\Result($timezones[0][2]);
+      return new timezone\Result($timezones[0][2], $date);
     else
       return null;
   }
