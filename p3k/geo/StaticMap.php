@@ -478,8 +478,8 @@ function generate($params, $filename, $assetPath) {
 
   // Add markers
   foreach($markers as $marker) {
-    // Icons that start with 'dot-' do not have a shadow
-    $shadow = !preg_match('/^dot-/', $marker['icon']);
+    // Icons that have 'dot' in the name do not have a shadow and center vertically and horizontally
+    $shadow = !preg_match('/dot/', $marker['icon']);
 
     if($width < 120 || $height < 120) {
       $shrinkFactor = 1.5;
