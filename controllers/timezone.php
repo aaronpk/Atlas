@@ -8,7 +8,11 @@ $app->get('/api/timezone', function() use($app) {
     $lat = (float)$params['latitude'];
     $lng = (float)$params['longitude'];
 
-    $timezone = \p3k\Timezone::timezone_for_location($lat, $lng);
+    $tz = \p3k\Timezone::timezone_for_location($lat, $lng);
+    $timezone = false;
+    if($tz) {
+      $timezone = new p3k\timezone\Result($tz);
+    }
 
     if($timezone) {
       json_response($app, [

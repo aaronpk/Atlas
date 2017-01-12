@@ -42,7 +42,11 @@ $app->get('/api/geocode', function() use($app) {
       $response['full_name'] = $adr->fullName;
     }
 
-    $timezone = p3k\Timezone::timezone_for_location($response['latitude'], $response['longitude'], k($params,'date'));
+    $tz = p3k\Timezone::timezone_for_location($response['latitude'], $response['longitude'], k($params,'date'));
+    $timezone = false;
+    if($tz) {
+      $timezone = new p3k\timezone\Result($tz, k($params, 'date'));
+    }
 
     if($timezone) {
       $response['timezone'] = $timezone->name;
