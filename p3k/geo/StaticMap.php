@@ -531,7 +531,7 @@ function generate($params, $filename, $assetPath) {
 
     // Shrink the esri logo if the image is small
     if($width > 120) {
-      if($width < 220) {
+      if($width < 220 || k($params, 'attribution') == 'small') {
         $shrinkFactor = 2;
         imagecopyresampled($im, $logo, $width-round(imagesx($logo)/$shrinkFactor)-4, $height-round(imagesy($logo)/$shrinkFactor)-4, 0,0, round(imagesx($logo)/$shrinkFactor),round(imagesy($logo)/$shrinkFactor), imagesx($logo),imagesy($logo));
       } else {
