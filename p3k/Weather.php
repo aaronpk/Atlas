@@ -42,10 +42,12 @@ class Weather {
         ];
         $sunny = self::_sunny($current->display_location->latitude, $current->display_location->longitude, $current->local_tz_long);
       } else {
-        $sunny = 'day';
+        $sunny = ['light'=>'day'];
       }
 
-      $icon_name = self::_icon_name($current->icon, $sunny);
+      $icon_name = self::_icon_name($current->icon, $sunny['light']);
+
+      $weather['sun'] = $sunny;
 
       $weather['description'] = $current->weather;
       $weather['icon']['url'] = $current->icon_url;
@@ -104,23 +106,28 @@ class Weather {
     // Get the beginning of the current day
 
     $now = new DateTime();
-    if($timezone) {
-      $now->setTimeZone(new DateTimeZone($timezone));
+    if(!$timezone) {
+      $timezone = \p3k\Timezone::timezone_for_location($lat, $lng);
     }
-    $now->setTime(0,0,0);
-    $now = $now->format('U');
+    $tz = new DateTimeZone($timezone);
+    $now->setTimeZone($tz);
+    $offset = $now->format('Z')/3600;
+    $now = $now->format('H') + ($now->format('i')/60);
 
     if($lat !== null) {
-      $sunrise = date_sunrise($now, SUNFUNCS_RET_TIMESTAMP, $lat, $lng, 96);
-      $sunset = date_sunset($now, SUNFUNCS_RET_TIMESTAMP, $lat, $lng, 92);
+      $sunrise = date_sunrise($now, SUNFUNCS_RET_DOUBLE, $lat, $lng, 108, $offset);
+      $sunset = date_sunset($now, SUNFUNCS_RET_DOUBLE, $lat, $lng, 108, $offset);
 
-      if($sunrise < time() && time() < $sunset) {
-        return 'day';
-      } else {
-        return 'night';
-      }
+      return [
+        'sunrise' => round($sunrise,2),
+        'sunset' => round($sunset,2),
+        'now' => round($now,2),
+        'light' => ($sunrise < $now && $now < $sunset) ? 'day' : 'night',
+      ];
     } else {
-      return 'unknown';
+      return [
+        'light' => 'unknown'
+      ];
     }
   }
 
