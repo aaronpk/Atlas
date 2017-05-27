@@ -242,7 +242,7 @@ function generate($params, $filename, $assetPath) {
     ),
     'stamen-watercolor' => array(
       'http://tile.stamen.com/watercolor/{Z}/{X}/{Y}.png'
-    )
+    ),
   );
 
   if(k($params,'basemap') && k($tileServices, k($params,'basemap'))) {
@@ -251,6 +251,9 @@ function generate($params, $filename, $assetPath) {
       $overlayURL = $tileServices[k($params,'basemap')][1];
     else
       $overlayURL = 0;
+  } elseif(k($params, 'basemap') == 'custom') {
+    $tileURL = $params['tileurl'];
+    $overlayURL = false;
   } else {
     $tileURL = $tileServices['gray'][0];
     $overlayURL = false;
@@ -258,9 +261,9 @@ function generate($params, $filename, $assetPath) {
 
   function urlForTile($x, $y, $z, $tileURL) {
     return str_replace(array(
-      '{X}', '{Y}', '{Z}'
+      '{X}', '{Y}', '{Z}', '{x}', '{y}', '{z}'
     ), array(
-      $x, $y, $z
+      $x, $y, $z, $x, $y, $z
     ), $tileURL);
   }
 
@@ -300,6 +303,8 @@ function generate($params, $filename, $assetPath) {
   $mh = curl_multi_init();
   $numTiles = 0;
 
+  $urls = array();
+
   for($x = $swTile['x']; $x <= $neTile['x']; $x++) {
     if(!array_key_exists("$x", $tiles)) {
       $tiles["$x"] = array();
@@ -310,6 +315,7 @@ function generate($params, $filename, $assetPath) {
 
     for($y = $swTile['y']; $y <= $neTile['y']; $y++) {
       $url = urlForTile($x, $y, $zoom, $tileURL);
+      $urls[] = $url;
       $tiles["$x"]["$y"] = false;
       $chs["$x"]["$y"] = curl_init($url);
       curl_setopt($chs["$x"]["$y"], CURLOPT_RETURNTRANSFER, TRUE);
@@ -525,11 +531,18 @@ function generate($params, $filename, $assetPath) {
   }
 
 
+  if(k($params,'attribution') == 'mapbox') {
+    $logo = imagecreatefrompng($assetPath . '/mapbox-attribution.png');
+    imagecopy($im, $logo, $width-imagesx($logo), $height-imagesy($logo), 0,0, imagesx($logo),imagesy($logo));
+  } elseif(k($params,'attribution') == 'mapbox-small') {
+    $logo = imagecreatefrompng($assetPath . '/mapbox-attribution.png');
+    $shrinkFactor = 2;
+    imagecopyresampled($im, $logo, $width-round(imagesx($logo)/$shrinkFactor), $height-round(imagesy($logo)/$shrinkFactor), 0,0, round(imagesx($logo)/$shrinkFactor),round(imagesy($logo)/$shrinkFactor), imagesx($logo),imagesy($logo));
 
-  if(k($params,'attribution') != 'none') {
+  } elseif(k($params,'attribution') != 'none') {
     $logo = imagecreatefrompng($assetPath . '/powered-by-esri.png');
 
-    // Shrink the esri logo if the image is small
+    // Shrink the logo if the image is small
     if($width > 120) {
       if($width < 220 || k($params, 'attribution') == 'small') {
         $shrinkFactor = 2;
