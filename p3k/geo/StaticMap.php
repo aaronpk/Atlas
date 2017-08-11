@@ -1,6 +1,6 @@
 <?php
 namespace p3k\geo\StaticMap;
-use p3k\geo\WebMercator;
+use p3k\geo\WebMercator, p3k\Geocoder;
 use Imagick, ImagickPixel, ImagickDraw;
 
 function generate($params, $filename, $assetPath) {
@@ -35,8 +35,8 @@ function generate($params, $filename, $assetPath) {
 
           // Geocode the provided location and return lat/lng
           if(array_key_exists('location', $properties)) {
-            $result = ArcGISGeocoder::geocode($properties['location']);
-            if(!$result->success) {
+            $result = Geocoder::geocode($properties['location']);
+            if(!$result) {
               #header('X-Marker-' . ($i+1) . ': error geocoding location "' . $properties['location'] . '"');
               continue;
             }
