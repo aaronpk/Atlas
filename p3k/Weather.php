@@ -5,8 +5,8 @@ use Config;
 use DateTime, DateTimeZone;
 
 class Weather {
-  public static function weather_for_location($lat, $lng) {
-    $data = self::_fetch($lat, $lng);
+  public static function weather_for_location($lat, $lng, $key) {
+    $data = self::_fetch($lat, $lng, $key);
     if(!$data) return null;
 
     $current = $data->current_observation;
@@ -87,9 +87,9 @@ class Weather {
     return $weather;
   }
 
-  private static function _fetch($lat, $lng) {
+  private static function _fetch($lat, $lng, $key) {
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'http://api.wunderground.com/api/'.Config::$wundergroundAPIKey.'/conditions/q/'.$lat.','.$lng.'.json');
+    curl_setopt($ch, CURLOPT_URL, 'http://api.wunderground.com/api/'.$key.'/conditions/q/'.$lat.','.$lng.'.json');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     // curl_setopt($ch, CURLOPT_USERAGENT, '');
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);

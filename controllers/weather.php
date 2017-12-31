@@ -3,12 +3,13 @@
 $app->get('/api/weather', function() use($app) {
   $params = $app->request()->params();
 
-  if(k($params, 'latitude') !== null && k($params, 'longitude') !== null) {
+  if(k($params, 'latitude') !== null && k($params, 'longitude') !== null && k($params, 'apikey') !== null) {
 
     $lat = (float)$params['latitude'];
     $lng = (float)$params['longitude'];
+    $key = $params['apikey'];
 
-    $weather = \p3k\Weather::weather_for_location($lat, $lng);
+    $weather = \p3k\Weather::weather_for_location($lat, $lng, $key);
 
     if($weather) {
       json_response($app, $weather);
