@@ -6,6 +6,7 @@
 
     <ul>
       <li><a href="/api/timezone?latitude=45.5118&amp;longitude=-122.6433">/api/timezone?latitude=45.5118&amp;longitude=-122.6433</a></li>
+      <li><a href="/api/timezone?airport=PDX">/api/timezone?airport=PDX</a></li>
     </ul>
 
   <h2><i class="fa fa-globe"></i> Geocoder</h2>
