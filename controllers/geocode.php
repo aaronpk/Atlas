@@ -16,6 +16,7 @@ $app->get('/api/geocode', function() use($app) {
       'country' => null,
       'best_name' => null,
       'full_name' => null,
+      'postal-code' => null,
       'timezone' => null,
       'offset' => null,
       'seconds' => null,
@@ -40,6 +41,7 @@ $app->get('/api/geocode', function() use($app) {
       $response['country'] = $adr->countryName;
       $response['best_name'] = $adr->bestName;
       $response['full_name'] = $adr->fullName;
+      $response['postal-code'] = $adr->postalCode;
     }
 
     $tz = p3k\Timezone::timezone_for_location($response['latitude'], $response['longitude'], k($params,'date'));
@@ -58,8 +60,8 @@ $app->get('/api/geocode', function() use($app) {
     json_response($app, $response);
   } else {
     json_response($app, [
-      'error' => 'invalid_request', 
+      'error' => 'invalid_request',
       'error_description' => 'Request was missing parameters'
-    ], 400);    
+    ], 400);
   }
 });
