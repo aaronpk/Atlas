@@ -16,7 +16,7 @@ $app->get('/api/weather', function() use($app) {
     } else {
       json_response($app, [
         'error' => 'not_found',
-        'error_description' => 'No weather information was found for the requested location'
+        'error_description' => 'No weather information was found for the requested location, or you used an invalid API key'
       ]);
     }
   } else {

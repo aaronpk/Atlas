@@ -9,6 +9,9 @@ class Weather {
     $data = self::_fetch($lat, $lng, $key);
     if(!$data) return null;
 
+    if(!property_exists($data, 'current_observation'))
+      return null;
+
     $current = $data->current_observation;
 
     $weather = [
