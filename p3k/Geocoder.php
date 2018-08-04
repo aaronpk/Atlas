@@ -61,13 +61,22 @@ class Geocoder {
     if($attributes->Country)
       $result->countryName = $attributes->Country;
 
-    if($attributes->Postal)
+    if($attributes->Postal) {
       $result->postalCode = $attributes->Postal;
+    } else {
+      // If no postal code is returned, but there was coordinates, then reverse geocode to find the postal code
+      if($geometry) {
+        $rev = self::_reverse($result->latitude, $result->longitude);
+        if($rev && property_exists($rev->address, 'Postal')) {
+          $result->postalCode = $rev->address->Postal;
+        }
+      }
+    }
 
     if($location->name)
       $result->fullAddress = $location->name;
 
-    return $result;    
+    return $result;
   }
 
   private static function _reverse($lat, $lng) {
@@ -81,7 +90,7 @@ class Geocoder {
     if($result == FALSE)
       return FALSE;
 
-    return json_decode($result);    
+    return json_decode($result);
   }
 
   private static function _geocode($input) {
@@ -103,7 +112,7 @@ class Geocoder {
     if($result == FALSE)
       return FALSE;
 
-    return json_decode($result);    
+    return json_decode($result);
   }
 
 }
