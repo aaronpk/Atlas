@@ -9,6 +9,9 @@ class Geocoder {
     if(!$response)
       return false;
 
+    if(!property_exists($response, 'address'))
+      return false;
+
     $address = $response->address;
 
     $result = new geocode\Result;
