@@ -32,7 +32,7 @@
       <li><a href="/api/weather?latitude=45.5118&amp;longitude=-122.6433&amp;apikey=XXX">/api/weather?latitude=45.5118&amp;longitude=-122.6433&amp;apikey=XXX</a></li>
     </ul>
 
-    <p>You'll need to pass a Wunderground API key in the request. Icon names reference the <a href="https://erikflowers.github.io/weather-icons/">weather-icons</a> icon font.</p>
+    <p>You'll need to pass a Dark Sky API key in the request. Icon names reference the <a href="https://erikflowers.github.io/weather-icons/">weather-icons</a> icon font.</p>
 
   <h2><i class="fa fa-map"></i> Static Maps</h2>
 

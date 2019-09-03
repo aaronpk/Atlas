@@ -9,15 +9,14 @@ class Weather {
     $data = self::_fetch($lat, $lng, $key);
     if(!$data) return null;
 
-    if(!property_exists($data, 'current_observation'))
+    if(!property_exists($data, 'currently'))
       return null;
 
-    $current = $data->current_observation;
+    $current = $data->currently;
 
     $weather = [
       'description' => null,
       'icon' => [
-        'url' => null,
         'name' => null
       ],
       'temp' => null,
@@ -35,54 +34,42 @@ class Weather {
 
     if($current) {
 
-      $loc = $current->display_location;
-      if($loc) {
-        $weather['location'] = [
-          'city' => $loc->city,
-          'state' => $loc->state,
-          'country' => $loc->country,
-          'zip' => $loc->zip
-        ];
-        $sunny = self::_sunny($current->display_location->latitude, $current->display_location->longitude, $current->local_tz_long);
-      } else {
-        $sunny = ['light'=>'day'];
-      }
+      $sunny = self::_sunny($data->latitude, $data->longitude);
 
-      $icon_name = self::_icon_name($current->icon, $sunny['light']);
+      $icon_name = self::_icon_name($current->icon);
 
       $weather['sun'] = $sunny;
 
-      $weather['description'] = $current->weather;
-      $weather['icon']['url'] = $current->icon_url;
+      $weather['description'] = $current->summary;
       $weather['icon']['name'] = $icon_name;
       $weather['temp'] = [
-        'num' => (double)$current->temp_f,
+        'num' => (double)$current->temperature,
         'unit' => '°F'
       ];
       $weather['feelslike'] = [
-        'num' => (double)$current->feelslike_f,
+        'num' => (double)$current->apparentTemperature,
         'unit' => '°F'
       ];
       $weather['wind'] = [
-        'num' => $current->wind_mph,
+        'num' => $current->windSpeed,
         'unit' => 'mph'
       ];
       $weather['pressure'] = [
-        'num' => (int)$current->pressure_mb,
+        'num' => (int)$current->pressure,
         'unit' => 'mb'
       ];
-      $weather['precip_today'] = [
-        'num' => (double)$current->precip_today_in,
-        'unit' => 'in'
-      ];
       $weather['humidity'] = [
-        'num' => (int)str_replace('%','',$current->relative_humidity),
+        'num' => round($current->humidity*100),
         'unit' => '%'
       ];
 
-      $weather['timezone']['offset'] = $current->local_tz_offset;
-      $weather['timezone']['name'] = $current->local_tz_long;
-      $weather['timezone']['abbr'] = $current->local_tz_short;
+      $tz = new DateTimeZone($sunny['timezone']);
+      $now = new DateTime();
+      $now->setTimeZone($tz);
+      $offset = $now->format('Z')/3600;
+
+      $weather['timezone']['name'] = $sunny['timezone'];
+      $weather['timezone']['offset'] = $offset;
     }
 
     #$weather['raw'] = $current;
@@ -91,8 +78,12 @@ class Weather {
   }
 
   private static function _fetch($lat, $lng, $key) {
+    $params = [
+      'exclude' => 'minutely,hourly,daily,alerts,flags',
+      'units' => 'us',
+    ];
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'http://api.wunderground.com/api/'.$key.'/conditions/q/'.$lat.','.$lng.'.json');
+    curl_setopt($ch, CURLOPT_URL, 'https://api.darksky.net/forecast/'.$key.'/'.$lat.','.$lng.'?'.http_build_query($params));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     // curl_setopt($ch, CURLOPT_USERAGENT, '');
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);
@@ -105,7 +96,7 @@ class Weather {
   }
 
   // Returns "day" or "night" depending on whether the sun is up at the given location
-  private static function _sunny($lat, $lng, $timezone) {
+  private static function _sunny($lat, $lng, $timezone=null) {
     // Get the beginning of the current day
 
     $now = new DateTime();
@@ -117,72 +108,37 @@ class Weather {
     $offset = $now->format('Z')/3600;
     $now = $now->format('H') + ($now->format('i')/60);
 
-    if($lat !== null) {
-      $sunrise = date_sunrise($now, SUNFUNCS_RET_DOUBLE, $lat, $lng, 108, $offset);
-      $sunset = date_sunset($now, SUNFUNCS_RET_DOUBLE, $lat, $lng, 108, $offset);
+    $sunrise = date_sunrise($now, SUNFUNCS_RET_DOUBLE, $lat, $lng, 108, $offset);
+    $sunset = date_sunset($now, SUNFUNCS_RET_DOUBLE, $lat, $lng, 108, $offset);
 
-      return [
-        'sunrise' => round($sunrise,2),
-        'sunset' => round($sunset,2),
-        'now' => round($now,2),
-        'light' => ($sunrise < $now && $now < $sunset) ? 'day' : 'night',
-      ];
-    } else {
-      return [
-        'light' => 'unknown'
-      ];
-    }
+    return [
+      'sunrise' => round($sunrise,2),
+      'sunset' => round($sunset,2),
+      'now' => round($now,2),
+      'light' => ($sunrise < $now && $now < $sunset) ? 'day' : 'night',
+      'timezone' => $timezone,
+    ];
   }
 
-  private static function _icon_name($icon, $sunny) {
-    // This list is from http://www.wunderground.com/weather/api/d/docs?d=resources/icon-sets
-    // A mapping of wunderground to weather-icons is here https://erikflowers.github.io/weather-icons/api-list.html
+  private static function _icon_name($icon) {
+    // A mapping of darksky to weather-icons is here https://erikflowers.github.io/weather-icons/api-list.html
     $map = [
-      'day' => [
-        'chanceflurries' => 'snow-wind',
-        'chancerain' => 'day-rain',
-        'chancesleet' => 'sleet',
-        'chancesnow' => 'snow',
-        'chancetstorms' => 'thunderstorm',
-        'clear' => 'day-sunny',
-        'cloudy' => 'cloudy',
-        'flurries' => 'snow-wind',
-        'fog' => 'day-haze',
-        'hazy' => 'day-haze',
-        'mostlycloudy' => 'cloud',
-        'mostlysunny' => 'day-sunny-overcast',
-        'partlycloudy' => 'day-cloudy',
-        'partlysunny' => 'day-sunny-overcast',
-        'sleet' => 'sleet',
-        'rain' => 'rain',
-        'snow' => 'snow',
-        'sunny' => 'day-sunny',
-        'tstorms' => 'thunderstorm',
-      ],
-      'night' => [
-        'chanceflurries' => 'night-snow-wind',
-        'chancerain' => 'night-rain',
-        'chancesleet' => 'night-alt-sleet',
-        'chancesnow' => 'night-snow',
-        'chancetstorms' => 'night-thunderstorm',
-        'clear' => 'night-clear',
-        'cloudy' => 'cloudy',
-        'flurries' => 'night-alt-snow-wind',
-        'fog' => 'night-fog',
-        'hazy' => 'night-fog',
-        'mostlycloudy' => 'night-alt-cloudy',
-        'mostlysunny' => 'night-clear',
-        'partlycloudy' => 'night-alt-partly-cloudy',
-        'partlysunny' => 'night-alt-partly-cloudy',
-        'sleet' => 'night-alt-sleet',
-        'rain' => 'night-alt-showers',
-        'snow' => 'night-alt-snow',
-        'sunny' => 'night-clear',
-        'tstorms' => 'night-alt-thunderstorm',
-      ]
+      'clear-day' => 'day-sunny',
+      'clear-night' => 'night-clear',
+      'rain' => 'rain',
+      'snow' => 'snow',
+      'sleet' => 'sleet',
+      'wind' => 'strong-wind',
+      'fog' => 'day-haze',
+      'cloudy' => 'cloudy',
+      'partly-cloudy-day' => 'day-cloudy',
+      'partly-cloudy-night' => 'night-cloudy',
+      'hail' => 'day-hail',
+      'thunderstorm' => 'thunderstorm',
+      'tornado' => 'tornado',
     ];
-    if(array_key_exists($icon, $map[$sunny])) {
-      return 'wi-'.$map[$sunny][$icon];
+    if(array_key_exists($icon, $map)) {
+      return 'wi-'.$map[$icon];
     } else {
       return false;
     }
