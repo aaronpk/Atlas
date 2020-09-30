@@ -41,7 +41,7 @@ class Geocoder {
   public static function geocode($input) {
     $response = self::_geocode($input);
 
-    if(!$response || count($response->locations) == 0)
+    if(!$response || !property_exists($response, 'locations') || count($response->locations) == 0)
       return false;
 
     $location = $response->locations[0];
@@ -106,7 +106,7 @@ class Geocoder {
       'outFields' => 'City,Region,Country,Postal',
     ];
 
-    curl_setopt($ch, CURLOPT_URL, 'http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find?' . http_build_query($params));
+    curl_setopt($ch, CURLOPT_URL, 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find?' . http_build_query($params));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     // curl_setopt($ch, CURLOPT_USERAGENT, '');
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);
