@@ -6,13 +6,15 @@ use DateTime, DateTimeZone;
 
 class Weather {
   public static function weather_for_location($lat, $lng, $key) {
+    if($key == 'XXX') {
+      return ['error' => 'Please provide an api key from openweathermap.org'];
+    }
+
     $data = self::_fetch($lat, $lng, $key);
     if(!$data) return null;
 
-    if(!property_exists($data, 'currently'))
+    if(!property_exists($data, 'weather'))
       return null;
-
-    $current = $data->currently;
 
     $weather = [
       'description' => null,
@@ -32,45 +34,42 @@ class Weather {
       ]
     ];
 
-    if($current) {
+    $sunny = self::_sunny($data->coord->lat, $data->coord->lon);
 
-      $sunny = self::_sunny($data->latitude, $data->longitude);
+    $icon_name = self::_icon_name($data->weather[0]->id);
 
-      $icon_name = self::_icon_name($current->icon);
+    $weather['sun'] = $sunny;
 
-      $weather['sun'] = $sunny;
+    $weather['description'] = $data->weather[0]->description;
+    $weather['icon']['name'] = $icon_name;
+    $weather['temp'] = [
+      'num' => (double)$data->main->temp,
+      'unit' => '°F'
+    ];
+    $weather['feelslike'] = [
+      'num' => (double)$data->main->feels_like,
+      'unit' => '°F'
+    ];
+    $weather['wind'] = [
+      'num' => $data->wind->speed,
+      'unit' => 'mph'
+    ];
+    $weather['pressure'] = [
+      'num' => (int)$data->main->pressure,
+      'unit' => 'mb'
+    ];
+    $weather['humidity'] = [
+      'num' => round($data->main->humidity),
+      'unit' => '%'
+    ];
 
-      $weather['description'] = $current->summary;
-      $weather['icon']['name'] = $icon_name;
-      $weather['temp'] = [
-        'num' => (double)$current->temperature,
-        'unit' => '°F'
-      ];
-      $weather['feelslike'] = [
-        'num' => (double)$current->apparentTemperature,
-        'unit' => '°F'
-      ];
-      $weather['wind'] = [
-        'num' => $current->windSpeed,
-        'unit' => 'mph'
-      ];
-      $weather['pressure'] = [
-        'num' => (int)$current->pressure,
-        'unit' => 'mb'
-      ];
-      $weather['humidity'] = [
-        'num' => round($current->humidity*100),
-        'unit' => '%'
-      ];
+    $tz = new DateTimeZone($data->timezone);
+    $now = new DateTime();
+    $now->setTimeZone($tz);
+    $offset = $now->format('Z')/3600;
 
-      $tz = new DateTimeZone($sunny['timezone']);
-      $now = new DateTime();
-      $now->setTimeZone($tz);
-      $offset = $now->format('Z')/3600;
-
-      $weather['timezone']['name'] = $sunny['timezone'];
-      $weather['timezone']['offset'] = $offset;
-    }
+    $weather['timezone']['name'] = $sunny['timezone'];
+    $weather['timezone']['offset'] = $offset;
 
     #$weather['raw'] = $current;
 
@@ -79,11 +78,13 @@ class Weather {
 
   private static function _fetch($lat, $lng, $key) {
     $params = [
-      'exclude' => 'minutely,hourly,daily,alerts,flags',
-      'units' => 'us',
+      'units' => 'imperial',
+      'lat' => $lat,
+      'lon' => $lng,
+      'appid' => $key,
     ];
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://api.darksky.net/forecast/'.$key.'/'.$lat.','.$lng.'?'.http_build_query($params));
+    curl_setopt($ch, CURLOPT_URL, 'https://api.openweathermap.org/data/2.5/weather?'.http_build_query($params));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     // curl_setopt($ch, CURLOPT_USERAGENT, '');
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);
@@ -108,8 +109,8 @@ class Weather {
     $offset = $now->format('Z')/3600;
     $now = $now->format('H') + ($now->format('i')/60);
 
-    $sunrise = date_sunrise($now, SUNFUNCS_RET_DOUBLE, $lat, $lng, 108, $offset);
-    $sunset = date_sunset($now, SUNFUNCS_RET_DOUBLE, $lat, $lng, 108, $offset);
+    $sunrise = date_sunrise($now, SUNFUNCS_RET_DOUBLE, $lat, $lng, 90, $offset);
+    $sunset = date_sunset($now, SUNFUNCS_RET_DOUBLE, $lat, $lng, 90, $offset);
 
     return [
       'sunrise' => round($sunrise,2),
@@ -121,6 +122,8 @@ class Weather {
   }
 
   private static function _icon_name($icon) {
+    return 'wi-owm-'.$icon;
+    /*
     // A mapping of darksky to weather-icons is here https://erikflowers.github.io/weather-icons/api-list.html
     $map = [
       'clear-day' => 'day-sunny',
@@ -142,6 +145,8 @@ class Weather {
     } else {
       return false;
     }
+    */
   }
 
 }
+

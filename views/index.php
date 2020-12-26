@@ -32,13 +32,13 @@
       <li><a href="/api/weather?latitude=45.5118&amp;longitude=-122.6433&amp;apikey=XXX">/api/weather?latitude=45.5118&amp;longitude=-122.6433&amp;apikey=XXX</a></li>
     </ul>
 
-    <p>You'll need to pass a Dark Sky API key in the request. Icon names reference the <a href="https://erikflowers.github.io/weather-icons/">weather-icons</a> icon font.</p>
+    <p>You'll need to pass an OpenWeatherMap.org API key in the request. Icon names reference the <a href="https://erikflowers.github.io/weather-icons/">weather-icons</a> icon font.</p>
 
   <h2><i class="fa fa-map"></i> Static Maps</h2>
 
     <p><a href="/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&amp;basemap=gray&amp;width=600&amp;height=240&amp;zoom=14">/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&amp;basemap=gray&amp;width=600&amp;height=240&amp;zoom=14</a></p>
     <img src="/assets/sample-map.png" width="600"/>
 
-    <p>See <a href="https://github.com/esripdx/Static-Maps-API-PHP/">Static-Maps-API</a> for full API docs</p>
+    <p>See <a href="https://github.com/aaronpk/Static-Maps-API-PHP/">Static-Maps-API</a> for full API docs</p>
 
 </div>
