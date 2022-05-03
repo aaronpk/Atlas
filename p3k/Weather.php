@@ -63,10 +63,7 @@ class Weather {
       'unit' => '%'
     ];
 
-    $tz = new DateTimeZone($data->timezone);
-    $now = new DateTime();
-    $now->setTimeZone($tz);
-    $offset = $now->format('Z')/3600;
+    $offset = $data->timezone;
 
     $weather['timezone']['name'] = $sunny['timezone'];
     $weather['timezone']['offset'] = $offset;
