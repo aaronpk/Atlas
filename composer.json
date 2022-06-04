@@ -16,7 +16,6 @@
       "p3k\\": "p3k/"
     },
     "files": [
-      "lib/config.php",
       "lib/helpers.php",
       "p3k/geo/WebMercator.php",
       "p3k/geo/StaticMap.php"
