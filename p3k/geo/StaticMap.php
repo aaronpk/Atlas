@@ -307,6 +307,7 @@ function generate($params, $filename, $assetPath) {
   $urls = array();
 
   for($x = $swTile['x']; $x <= $neTile['x']; $x++) {
+    $x = (int)$x;
     if(!array_key_exists($x, $tiles)) {
       $tiles[$x] = array();
       $overlays[$x] = array();
@@ -315,6 +316,7 @@ function generate($params, $filename, $assetPath) {
     }
 
     for($y = $swTile['y']; $y <= $neTile['y']; $y++) {
+      $y = (int)$y;
       $url = urlForTile($x, $y, $zoom, $tileURL);
       $urls[] = $url;
       $tiles[$x][$y] = false;
