@@ -49,6 +49,7 @@ function generate($params, $filename, $assetPath) {
             // Looks like an external image, attempt to download it
             $ch = curl_init($properties['icon']);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             $img = curl_exec($ch);
             $properties['iconImg'] = @imagecreatefromstring($img);
             if(!$properties['iconImg']) {
@@ -318,14 +319,16 @@ function generate($params, $filename, $assetPath) {
       $urls[] = $url;
       $tiles["$x"]["$y"] = false;
       $chs["$x"]["$y"] = curl_init($url);
-      curl_setopt($chs["$x"]["$y"], CURLOPT_RETURNTRANSFER, TRUE);
+      curl_setopt($chs[$x][$y], CURLOPT_RETURNTRANSFER, TRUE);
+      curl_setopt($chs[$x][$y], CURLOPT_FOLLOWLOCATION, true);
       curl_multi_add_handle($mh, $chs["$x"]["$y"]);
 
       if($overlayURL) {
         $url = urlForTile($x, $y, $zoom, $overlayURL);
         $overlays["$x"]["$y"] = false;
         $ochs["$x"]["$y"] = curl_init($url);
-        curl_setopt($ochs["$x"]["$y"], CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ochs[$x][$y], CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ochs[$x][$y], CURLOPT_FOLLOWLOCATION, TRUE);
         curl_multi_add_handle($mh, $ochs["$x"]["$y"]);
       }
 
