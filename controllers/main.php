@@ -12,6 +12,6 @@ $app->get('/map', function() use($app) {
 $app->map('/map/img', function() use($app) {
   $params = $app->request()->params();
   $app->response['Content-type'] = 'image/png';
-  $assetPath = dirname(__FILE__) . '/../p3k/map/images';
+  $assetPath = dirname(__FILE__) . '/../public/map-images';
   $map = p3k\geo\StaticMap\generate($params, null, $assetPath);
 })->via('GET','POST');
