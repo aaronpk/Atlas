@@ -3,7 +3,7 @@ namespace p3k\geo\StaticMap;
 use p3k\geo\WebMercator, p3k\Geocoder;
 use Imagick, ImagickPixel, ImagickDraw;
 
-function generate($params, $filename, $assetPath) {
+function generate($params, $filename, $assetPath, $is_authenticated=false) {
 
   $bounds = array(
     'minLat' => 90,
@@ -46,14 +46,15 @@ function generate($params, $filename, $assetPath) {
           }
 
           if(preg_match('/https?:\/\/(.+)/', $properties['icon'], $match)) {
-            // Looks like an external image, attempt to download it
-            $ch = curl_init($properties['icon']);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            $img = curl_exec($ch);
-            $properties['iconImg'] = @imagecreatefromstring($img);
-            if(!$properties['iconImg']) {
-              $properties['iconImg'] = false;
+            $properties['iconImg'] = false;
+            // Only allow external referenced icons from authenticated requests
+            if($is_authenticated) {
+              // Looks like an external image, attempt to download it
+              $ch = curl_init($properties['icon']);
+              curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+              curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+              $img = curl_exec($ch);
+              $properties['iconImg'] = @imagecreatefromstring($img);
             }
           } else {
             $properties['iconImg'] = imagecreatefrompng($assetPath . '/' . $properties['icon'] . '.png');
@@ -252,7 +253,7 @@ function generate($params, $filename, $assetPath) {
       $overlayURL = $tileServices[k($params,'basemap')][1];
     else
       $overlayURL = 0;
-  } elseif(k($params, 'basemap') == 'custom') {
+  } elseif(k($params, 'basemap') == 'custom' && $is_authenticated) {
     $tileURL = $params['tileurl'];
     $overlayURL = false;
   } else {

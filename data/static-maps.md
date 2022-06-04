@@ -40,6 +40,7 @@ Parameters can be included in either the query string or in the POST body.
 * `location` - optional - Free-form text that will be geocoded to center the map. Not needed if specifying a location with the latitude and longitude parameters, or if a marker is specified.
 * `marker[]` - Specify one or more markers to overlay on the map. Parameters are specified as: `key:value;`. See below for the full list of parameters.
 * `path[]` - Specify one or more paths to draw on the map. See below for the full list of parameters to draw a path.
+* `token` - To use external icons or tile URLs, provide an API key in the request. See below for documentation on configuring this.
 
 ## Markers
 
@@ -109,6 +110,14 @@ Parameters can be included in either the query string or in the POST body.
 * ![small-yellow-blank](map-images/small-yellow-blank.png) `small-yellow-blank`
 * ![small-yellow-cutout](map-images/small-yellow-cutout.png) `small-yellow-cutout`
 * ![small-yellow-user](map-images/small-yellow-user.png) `small-yellow-user`
+
+
+## Authentication
+
+To be able to use externally-referenced icons or tile URLs, you will need to configure API keys and provide a token in the request. This locks down the ability to fetch external resources to only trusted users of the system.
+
+Create a file `data/apikeys.txt` and generate a random string with a tool of your choosing, and with one API key per line. Any value passed in the parameter `token` that matches the text in a line in this file will enable the request to use the restricted features that reference external URLs.
+
 
 ## Paths
 

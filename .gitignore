@@ -2,3 +2,4 @@
 vendor/
 lib/config.php
 data/airports.csv
+data/apikeys.txt

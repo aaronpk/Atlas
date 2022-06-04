@@ -24,3 +24,19 @@ function k($a, $k, $default=null) {
   }
 }
 
+function is_authenticated($params) {
+  if(!isset($params['token']))
+    return false;
+
+  $token_file = __DIR__.'/../data/apikeys.txt';
+
+  if(!file_exists($token_file))
+    return false;
+
+  $valid_tokens = array_filter(file($token_file));
+
+  if(in_array($params['token'], $valid_tokens))
+    return true;
+
+  return false;
+}
