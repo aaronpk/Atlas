@@ -352,9 +352,8 @@ function generate($params, $filename, $assetPath) {
   foreach($chs as $x=>$yTiles) {
     foreach($yTiles as $y=>$ch) {
       $content = curl_multi_getcontent($ch);
-      if($content)
-        $tiles[$x][$y] = @imagecreatefromstring($content);
-      else
+      $tiles[$x][$y] = @imagecreatefromstring($content);
+      if(!$tiles[$x][$y])
         $tiles[$x][$y] = $blank;
     }
   }
@@ -363,9 +362,8 @@ function generate($params, $filename, $assetPath) {
     foreach($ochs as $x=>$yTiles) {
       foreach($yTiles as $y=>$ch) {
         $content = curl_multi_getcontent($ch);
-        if($content)
-          $overlays[$x][$y] = @imagecreatefromstring($content);
-        else
+        $overlays[$x][$y] = @imagecreatefromstring($content);
+        if(!$overlays[$x][$y])
           $overlays[$x][$y] = $blank;
       }
     }
