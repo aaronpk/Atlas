@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL ^ E_DEPRECATED);
 
 function json_response(&$app, $response, $code=200) {
   $app->response()->status($code);
