@@ -42,3 +42,8 @@ a:hover {
 h2 i.fa {
   font-size: 42px;
 }
+
+.docs li {
+  line-height: 1.2em;
+  margin-top: 0.4em;
+}

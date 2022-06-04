@@ -1,3 +1,8 @@
+<header>
+  <h1>Atlas</h1>
+  <p>Atlas is a set of APIs for looking up information about locations.</p>
+</header>
+
 <div class="page">
 
   <h2><i class="fa fa-clock-o"></i> Timezone</h2>
@@ -39,6 +44,6 @@
     <p><a href="/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&amp;basemap=gray&amp;width=600&amp;height=240&amp;zoom=14">/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&amp;basemap=gray&amp;width=600&amp;height=240&amp;zoom=14</a></p>
     <img src="/assets/sample-map.png" width="600"/>
 
-    <p>See <a href="https://github.com/aaronpk/Static-Maps-API-PHP/">Static-Maps-API</a> for full API docs</p>
+    <p><a href="/static-maps">Full API docs</a></p>
 
 </div>

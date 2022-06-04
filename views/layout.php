@@ -10,11 +10,6 @@
   </head>
   <body>
 
-    <header>
-      <h1>Atlas</h1>
-      <p>Atlas is a set of APIs for looking up information about locations.</p>
-    </header>
-
     <?= $this->fetch($this->page . '.php') ?>
 
     <footer>

@@ -5,6 +5,10 @@ $app->get('/', function() use($app) {
   return Savant\render('index');
 });
 
+$app->get('/static-maps', function() use($app) {
+  return Savant\render('static-maps');
+});
+
 $app->get('/map', function() use($app) {
   return Savant\render('map');
 });

@@ -8,9 +8,8 @@
     "saltybeagle/savant3": "dev-master",
     "p3k/slim-savant": ">=0.1.0",
     "slim/slim": "^2.6",
-    "p3k/timezone": "*"
-  },
-  "require-dev": {
+    "p3k/timezone": "*",
+    "michelf/php-markdown": "^1.9"
   },
   "autoload": {
     "psr-4": {
