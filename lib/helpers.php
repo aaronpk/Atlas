@@ -34,6 +34,9 @@ function is_authenticated($params) {
     return false;
 
   $valid_tokens = array_filter(file($token_file));
+  array_walk($valid_tokens, function(&$val) {
+    $val = trim($val);
+  });
 
   if(in_array($params['token'], $valid_tokens))
     return true;
