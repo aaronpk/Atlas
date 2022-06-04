@@ -307,29 +307,29 @@ function generate($params, $filename, $assetPath) {
   $urls = array();
 
   for($x = $swTile['x']; $x <= $neTile['x']; $x++) {
-    if(!array_key_exists("$x", $tiles)) {
-      $tiles["$x"] = array();
-      $overlays["$x"] = array();
-      $chs["$x"] = array();
-      $ochs["$x"] = array();
+    if(!array_key_exists($x, $tiles)) {
+      $tiles[$x] = array();
+      $overlays[$x] = array();
+      $chs[$x] = array();
+      $ochs[$x] = array();
     }
 
     for($y = $swTile['y']; $y <= $neTile['y']; $y++) {
       $url = urlForTile($x, $y, $zoom, $tileURL);
       $urls[] = $url;
-      $tiles["$x"]["$y"] = false;
-      $chs["$x"]["$y"] = curl_init($url);
+      $tiles[$x][$y] = false;
+      $chs[$x][$y] = curl_init($url);
       curl_setopt($chs[$x][$y], CURLOPT_RETURNTRANSFER, TRUE);
       curl_setopt($chs[$x][$y], CURLOPT_FOLLOWLOCATION, true);
-      curl_multi_add_handle($mh, $chs["$x"]["$y"]);
+      curl_multi_add_handle($mh, $chs[$x][$y]);
 
       if($overlayURL) {
         $url = urlForTile($x, $y, $zoom, $overlayURL);
-        $overlays["$x"]["$y"] = false;
-        $ochs["$x"]["$y"] = curl_init($url);
+        $overlays[$x][$y] = false;
+        $ochs[$x][$y] = curl_init($url);
         curl_setopt($ochs[$x][$y], CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ochs[$x][$y], CURLOPT_FOLLOWLOCATION, TRUE);
-        curl_multi_add_handle($mh, $ochs["$x"]["$y"]);
+        curl_multi_add_handle($mh, $ochs[$x][$y]);
       }
 
       $numTiles++;
