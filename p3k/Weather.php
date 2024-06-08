@@ -13,7 +13,7 @@ class Weather {
     $data = self::_fetch($lat, $lng, $key);
     if(!$data) return null;
 
-    if(!property_exists($data, 'weather'))
+    if(!property_exists($data, 'current'))
       return null;
 
     $weather = [
@@ -34,39 +34,37 @@ class Weather {
       ]
     ];
 
-    $sunny = self::_sunny($data->coord->lat, $data->coord->lon);
+    $sunny = self::_sunny($data->lat, $data->lon);
 
-    $icon_name = self::_icon_name($data->weather[0]->id);
+    $icon_name = self::_icon_name($data->current->weather[0]->id);
 
     $weather['sun'] = $sunny;
 
-    $weather['description'] = $data->weather[0]->description;
+    $weather['description'] = $data->current->weather[0]->description;
     $weather['icon']['name'] = $icon_name;
     $weather['temp'] = [
-      'num' => (double)$data->main->temp,
+      'num' => (double)$data->current->temp,
       'unit' => '°F'
     ];
     $weather['feelslike'] = [
-      'num' => (double)$data->main->feels_like,
+      'num' => (double)$data->current->feels_like,
       'unit' => '°F'
     ];
     $weather['wind'] = [
-      'num' => $data->wind->speed,
+      'num' => $data->current->wind_speed,
       'unit' => 'mph'
     ];
     $weather['pressure'] = [
-      'num' => (int)$data->main->pressure,
+      'num' => (int)$data->current->pressure,
       'unit' => 'mb'
     ];
     $weather['humidity'] = [
-      'num' => round($data->main->humidity),
+      'num' => round($data->current->humidity),
       'unit' => '%'
     ];
 
-    $offset = $data->timezone;
-
-    $weather['timezone']['name'] = $sunny['timezone'];
-    $weather['timezone']['offset'] = $offset;
+    $weather['timezone']['name'] = $data->timezone;
+    $weather['timezone']['offset'] = $data->timezone_offset;
 
     #$weather['raw'] = $current;
 
@@ -81,7 +79,7 @@ class Weather {
       'appid' => $key,
     ];
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://api.openweathermap.org/data/2.5/weather?'.http_build_query($params));
+    curl_setopt($ch, CURLOPT_URL, 'https://api.openweathermap.org/data/3.0/onecall?'.http_build_query($params));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     // curl_setopt($ch, CURLOPT_USERAGENT, '');
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);
