@@ -77,6 +77,7 @@ class Weather {
       'lat' => $lat,
       'lon' => $lng,
       'appid' => $key,
+      'exclude' => 'minutely,hourly,daily,alerts'
     ];
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, 'https://api.openweathermap.org/data/3.0/onecall?'.http_build_query($params));
