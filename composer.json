@@ -1,22 +1,32 @@
 {
   "name": "p3k/atlas",
-  "description": "Atlas",
+  "description": "Atlas: timezone, geocoding, weather and static map APIs. Usable as a web app or as a library.",
   "keywords": ["p3k", "indieweb", "maps", "geocoding", "timezone"],
-  "license": "Apache 2.0",
-  "type": "project",
+  "license": "Apache-2.0",
+  "type": "library",
+  "homepage": "https://github.com/aaronpk/Atlas",
+  "authors": [
+    {
+      "name": "Aaron Parecki",
+      "homepage": "https://aaronparecki.com"
+    }
+  ],
   "require": {
-    "saltybeagle/savant3": "dev-master",
-    "p3k/slim-savant": ">=0.1.0",
-    "slim/slim": "^2.6",
-    "p3k/timezone": "*",
-    "michelf/php-markdown": "^1.9"
+    "php": ">=8.1",
+    "ext-curl": "*",
+    "ext-gd": "*",
+    "ext-json": "*",
+    "p3k/timezone": "^0.1",
+    "michelf/php-markdown": "^1.9 || ^2.0"
+  },
+  "suggest": {
+    "ext-imagick": "Needed to draw paths on static maps"
   },
   "autoload": {
     "psr-4": {
       "p3k\\": "p3k/"
     },
     "files": [
-      "lib/helpers.php",
       "p3k/geo/WebMercator.php",
       "p3k/geo/StaticMap.php"
     ]

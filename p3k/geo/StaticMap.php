@@ -3,7 +3,28 @@ namespace p3k\geo\StaticMap;
 use p3k\geo\WebMercator, p3k\Geocoder;
 use Imagick, ImagickPixel, ImagickDraw;
 
-function generate($params, $filename, $assetPath, $is_authenticated=false) {
+/**
+ * The directory holding the built-in marker icons and attribution logos.
+ */
+function defaultAssetPath() {
+  return dirname(__DIR__, 2) . '/public/map-images';
+}
+
+/**
+ * Render a static map and return it as a string of image bytes.
+ *
+ * $params is the same array the /map/img endpoint accepts (marker[], path[],
+ * latitude/longitude, width, height, zoom, maxzoom, basemap, tileurl,
+ * attribution, format, quality, bezier). Nothing is written to the output
+ * buffer and no headers are sent, so this is safe to call from any app.
+ *
+ * Returns ['data' => string, 'contentType' => 'image/png'|'image/jpeg'].
+ */
+function render($params, $assetPath = null, $isAuthenticated = false) {
+  if ($assetPath === null) {
+    $assetPath = defaultAssetPath();
+  }
+  $is_authenticated = $isAuthenticated;
 
   $bounds = array(
     'minLat' => 90,
@@ -135,17 +156,13 @@ function generate($params, $filename, $assetPath, $is_authenticated=false) {
     $latitude = k($params,'latitude');
     $longitude = k($params,'longitude');
   } elseif(k($params,'location') !== false) {
-    $result = ArcGISGeocoder::geocode(k($params,'location'));
-    if(!$result->success) {
+    $result = Geocoder::geocode(k($params,'location'));
+    if(!$result || $result->latitude === null) {
       $latitude = $defaultLatitude;
       $longitude = $defaultLongitude;
-      #header('X-Geocode: error');
-      #header('X-Geocode-Result: ' . $result->raw);
     } else {
       $latitude = $result->latitude;
       $longitude = $result->longitude;
-      #header('X-Geocode: success');
-      #header('X-Geocode-Result: ' . $latitude . ', ' . $longitude);
     }
   } else {
     $latitude = $defaultLatitude;
@@ -261,14 +278,6 @@ function generate($params, $filename, $assetPath, $is_authenticated=false) {
     $overlayURL = false;
   }
 
-  function urlForTile($x, $y, $z, $tileURL) {
-    return str_replace(array(
-      '{X}', '{Y}', '{Z}', '{x}', '{y}', '{z}'
-    ), array(
-      $x, $y, $z, $x, $y, $z
-    ), $tileURL);
-  }
-
 
 
 
@@ -302,6 +311,7 @@ function generate($params, $filename, $assetPath, $is_authenticated=false) {
   $tiles = array();
   $overlays = array();
   $chs = array();
+  $ochs = array();
   $mh = curl_multi_init();
   $numTiles = 0;
 
@@ -376,8 +386,8 @@ function generate($params, $filename, $assetPath, $is_authenticated=false) {
       $x = intval($x);
       $y = intval($y);
 
-      $ox = (($x - $tilePos['x']) * TILE_SIZE) - $pos['x'] + ($width/2);
-      $oy = (($y - $tilePos['y']) * TILE_SIZE) - $pos['y'] + ($height/2);
+      $ox = (($x - $tilePos['x']) * WebMercator\TILE_SIZE) - $pos['x'] + ($width/2);
+      $oy = (($y - $tilePos['y']) * WebMercator\TILE_SIZE) - $pos['y'] + ($height/2);
 
       imagecopy($im, $tile, $ox,$oy, 0,0, imagesx($tile),imagesy($tile));
     }
@@ -389,8 +399,8 @@ function generate($params, $filename, $assetPath, $is_authenticated=false) {
         $x = intval($x);
         $y = intval($y);
 
-        $ox = (($x - $tilePos['x']) * TILE_SIZE) - $pos['x'] + ($width/2);
-        $oy = (($y - $tilePos['y']) * TILE_SIZE) - $pos['y'] + ($height/2);
+        $ox = (($x - $tilePos['x']) * WebMercator\TILE_SIZE) - $pos['x'] + ($width/2);
+        $oy = (($y - $tilePos['y']) * WebMercator\TILE_SIZE) - $pos['y'] + ($height/2);
 
         imagecopy($im, $tile, $ox,$oy, 0,0, imagesx($tile),imagesy($tile));
       }
@@ -558,30 +568,53 @@ function generate($params, $filename, $assetPath, $is_authenticated=false) {
   }
 
 
-  #header('Cache-Control: max-age=' . (60*60*24*30) . ', public');
-  #header('X-Tiles-Downloaded: ' . $numTiles);
-
-  // TODO: add caching
   $fmt = k($params,'format', 'png');
+  ob_start();
   switch($fmt) {
     case "jpg":
     case "jpeg":
-      header('Content-type: image/jpg');
-      $quality = k($params, 'quality', 75);
-      imagejpeg($im, $filename, $quality);
+      $contentType = 'image/jpeg';
+      $quality = (int)k($params, 'quality', 75);
+      imagejpeg($im, null, $quality);
       break;
     case "png":
     default:
-      header('Content-type: image/png');
-      imagepng($im, $filename);
+      $contentType = 'image/png';
+      imagepng($im);
       break;
   }
+  $data = ob_get_clean();
   imagedestroy($im);
 
   /**
    * http://msdn.microsoft.com/en-us/library/bb259689.aspx
    * http://derickrethans.nl/php-mapping.html
    */
+  return array('data' => $data, 'contentType' => $contentType);
+}
+
+/**
+ * The original entry point, kept for existing callers: writes the image to
+ * $filename, or sends it to the browser with a Content-type header when
+ * $filename is null.
+ */
+function generate($params, $filename, $assetPath, $is_authenticated=false) {
+  $image = render($params, $assetPath, $is_authenticated);
+  if($filename) {
+    file_put_contents($filename, $image['data']);
+  } else {
+    header('Content-type: ' . $image['contentType']);
+    echo $image['data'];
+  }
+  return $image;
+}
+
+function urlForTile($x, $y, $z, $tileURL) {
+  return str_replace(array(
+    '{X}', '{Y}', '{Z}', '{x}', '{y}', '{z}'
+  ), array(
+    $x, $y, $z, $x, $y, $z
+  ), $tileURL);
 }
 
 function k($a, $k, $default=false) {

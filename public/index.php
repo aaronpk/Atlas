@@ -1,12 +1,4 @@
 <?php
-chdir('..');
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
-\Slim\Savant\init();
-
-require 'controllers/main.php';
-require 'controllers/timezone.php';
-require 'controllers/geocode.php';
-require 'controllers/weather.php';
-
-$app->run();
+(new p3k\Atlas\App(dirname(__DIR__)))->run();

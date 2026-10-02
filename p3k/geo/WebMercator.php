@@ -1,7 +1,12 @@
 <?php
 namespace p3k\geo\WebMercator;
 
-define('TILE_SIZE', 256);
+const TILE_SIZE = 256;
+
+// Kept for code that still refers to the old global constant.
+if(!defined('TILE_SIZE')) {
+  define('TILE_SIZE', TILE_SIZE);
+}
 
 function totalPixelsForZoomLevel($zoom) {
   return pow(2, $zoom) * TILE_SIZE;

@@ -10,7 +10,7 @@
   </head>
   <body>
 
-    <?= $this->fetch($this->page . '.php') ?>
+    <?= $content ?>
 
     <footer>
       <div class="right">

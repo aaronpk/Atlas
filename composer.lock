@@ -4,27 +4,30 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8d813931b318f63554477f9c4a61c7c4",
+    "content-hash": "1b7ed514f9566466608f5a96c4601735",
     "packages": [
         {
             "name": "michelf/php-markdown",
-            "version": "1.9.1",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/michelf/php-markdown.git",
-                "reference": "5024d623c1a057dcd2d076d25b7d270a1d0d55f3"
+                "reference": "eb176f173fbac58a045aff78e55f833264b34e71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/5024d623c1a057dcd2d076d25b7d270a1d0d55f3",
-                "reference": "5024d623c1a057dcd2d076d25b7d270a1d0d55f3",
+                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/eb176f173fbac58a045aff78e55f833264b34e71",
+                "reference": "eb176f173fbac58a045aff78e55f833264b34e71",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=7.4"
             },
             "require-dev": {
-                "phpunit/phpunit": ">=4.3 <5.8"
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "phpstan/phpstan": ">=1.0",
+                "phpstan/phpstan-phpunit": ">=1.0",
+                "phpunit/phpunit": "^9.5"
             },
             "type": "library",
             "autoload": {
@@ -55,48 +58,9 @@
             ],
             "support": {
                 "issues": "https://github.com/michelf/php-markdown/issues",
-                "source": "https://github.com/michelf/php-markdown/tree/1.9.1"
+                "source": "https://github.com/michelf/php-markdown/tree/2.0.0"
             },
-            "time": "2021-11-24T02:52:38+00:00"
-        },
-        {
-            "name": "p3k/slim-savant",
-            "version": "0.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/aaronpk/Slim-Savant.git",
-                "reference": "129291da1223f5c95ad8f4e1bca21901ae45e53e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/Slim-Savant/zipball/129291da1223f5c95ad8f4e1bca21901ae45e53e",
-                "reference": "129291da1223f5c95ad8f4e1bca21901ae45e53e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">5.3.0",
-                "saltybeagle/savant3": "dev-master",
-                "slim/slim": ">=2.4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "Savant.php",
-                    "SlimSavant.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache 2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Aaron Parecki",
-                    "homepage": "http://aaronparecki.com"
-                }
-            ],
-            "description": "Savant renderer for Slim",
-            "time": "2015-07-21T01:40:52+00:00"
+            "time": "2022-09-26T12:21:08+00:00"
         },
         {
             "name": "p3k/timezone",
@@ -138,100 +102,25 @@
                 "p3k",
                 "timezone"
             ],
+            "support": {
+                "issues": "https://github.com/aaronpk/p3k-timezone/issues",
+                "source": "https://github.com/aaronpk/p3k-timezone/tree/0.1.0"
+            },
             "time": "2017-01-12T17:30:08+00:00"
-        },
-        {
-            "name": "saltybeagle/savant3",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/saltybeagle/Savant3.git",
-                "reference": "ebf4385bf44bec8c7a169571ac178f626017c466"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/saltybeagle/Savant3/zipball/ebf4385bf44bec8c7a169571ac178f626017c466",
-                "reference": "ebf4385bf44bec8c7a169571ac178f626017c466",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "Savant3.php",
-                    "Savant3",
-                    "Savant3/resources"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL"
-            ],
-            "authors": [
-                {
-                    "name": "Brett Bieber",
-                    "email": "brett.bieber@gmail.com"
-                }
-            ],
-            "description": "Savant3 template engine",
-            "time": "2014-01-07T17:10:32+00:00"
-        },
-        {
-            "name": "slim/slim",
-            "version": "2.6.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/slimphp/Slim.git",
-                "reference": "9224ed81ac1c412881e8d762755e3d76ebf580c0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/9224ed81ac1c412881e8d762755e3d76ebf580c0",
-                "reference": "9224ed81ac1c412881e8d762755e3d76ebf580c0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "suggest": {
-                "ext-mcrypt": "Required for HTTP cookie encryption",
-                "phpseclib/mcrypt_compat": "Polyfil for mcrypt extension"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Slim": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Josh Lockhart",
-                    "email": "info@joshlockhart.com",
-                    "homepage": "http://www.joshlockhart.com/"
-                }
-            ],
-            "description": "Slim Framework, a PHP micro framework",
-            "homepage": "http://github.com/codeguy/Slim",
-            "keywords": [
-                "microframework",
-                "rest",
-                "router"
-            ],
-            "time": "2017-01-07T12:21:41+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "saltybeagle/savant3": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform": {
+        "php": ">=8.1",
+        "ext-curl": "*",
+        "ext-gd": "*",
+        "ext-json": "*"
+    },
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }
