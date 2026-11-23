@@ -84,7 +84,7 @@ class Geocoder {
 
   private static function _reverse($lat, $lng) {
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location='.$lng.'%2C'.$lat.'&outSR=4326&f=json&distance=10000');
+    curl_setopt($ch, CURLOPT_URL, \p3k\Upstream::url('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location='.$lng.'%2C'.$lat.'&outSR=4326&f=json&distance=10000'));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     // curl_setopt($ch, CURLOPT_USERAGENT, '');
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);
@@ -106,7 +106,7 @@ class Geocoder {
       'outFields' => 'City,Region,Country,Postal',
     ];
 
-    curl_setopt($ch, CURLOPT_URL, 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find?' . http_build_query($params));
+    curl_setopt($ch, CURLOPT_URL, \p3k\Upstream::url('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find?' . http_build_query($params)));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     // curl_setopt($ch, CURLOPT_USERAGENT, '');
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);

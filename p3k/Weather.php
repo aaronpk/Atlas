@@ -80,7 +80,7 @@ class Weather {
       'exclude' => 'minutely,hourly,daily,alerts'
     ];
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://api.openweathermap.org/data/3.0/onecall?'.http_build_query($params));
+    curl_setopt($ch, CURLOPT_URL, \p3k\Upstream::url('https://api.openweathermap.org/data/3.0/onecall?'.http_build_query($params)));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     // curl_setopt($ch, CURLOPT_USERAGENT, '');
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);

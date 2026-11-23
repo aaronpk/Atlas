@@ -1,0 +1,133 @@
+# Requests recorded by tests/run.sh, one per line: [METHOD] path [form body after " | "]
+# The fixture server stands in for ArcGIS, OpenWeatherMap, tile servers and icons.
+
+# --- Pages ---------------------------------------------------------------------
+/
+/static-maps
+/map
+/map/
+/no-such-page
+/index.php
+/assets/styles.css
+HEAD /
+POST / | a=1
+
+# --- Timezone ------------------------------------------------------------------
+/api/timezone?latitude=45.5118&longitude=-122.6433
+/api/timezone?latitude=-36.85&longitude=174.76
+/api/timezone?latitude=0.5&longitude=-150
+/api/timezone?latitude=0&longitude=10
+/api/timezone?latitude=abc&longitude=-122
+/api/timezone?latitude=45.5
+/api/timezone?airport=PDX
+/api/timezone?airport=pdx
+/api/timezone?airport=%20PDX
+/api/timezone?airport=NRT
+/api/timezone?airport=ZZZ
+/api/timezone?airport=
+/api/timezone
+
+# --- Geocode -------------------------------------------------------------------
+/api/geocode?input=309+SW+6th+Ave,+Portland,+OR
+/api/geocode?input=Mount+Hood
+/api/geocode?input=Iceland
+/api/geocode?input=Tokyo+Tower&date=2016-07-12T09:00:00Z
+/api/geocode?input=nowhere+at+all
+/api/geocode?input=upstream+error
+/api/geocode?input=broken+json
+/api/geocode?latitude=45.5118&longitude=-122.6433
+/api/geocode?latitude=45.5118&longitude=-122.6433&date=2016-07-12T09:00:00Z
+/api/geocode?latitude=45.5118&longitude=-122.6433&date=2016-01-12T09:00:00-05:00
+/api/geocode?latitude=45.37361&longitude=-121.69583
+/api/geocode?latitude=0.5&longitude=-150
+/api/geocode?latitude=-77.85&longitude=166.67
+/api/geocode?latitude=45.5118
+/api/geocode
+
+# --- Weather -------------------------------------------------------------------
+/api/weather?latitude=45.5118&longitude=-122.6433&apikey=good-key
+/api/weather?latitude=-36.85&longitude=174.76&apikey=good-key
+/api/weather?latitude=45.5118&longitude=-122.6433&apikey=bad-key
+/api/weather?latitude=45.5118&longitude=-122.6433&apikey=XXX
+/api/weather?latitude=45.5118&longitude=-122.6433
+
+# --- Static maps: the README example and defaults ----------------------------------------
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&basemap=gray&width=600&height=240&zoom=14
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout
+/map/img?marker=lat:45.5165;lng:-122.6764;icon:large-red-cutout
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:large-red-cutout&marker[]=lat:45.53;lng:-122.66;icon:dot-small-green&marker[]=lat:45.50;lng:-122.70;icon:small-gray-user
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=12&width=400&height=300
+/map/img
+/map/img?zoom=3&width=256&height=256
+
+# --- Sizes and attribution ------------------------------------------------------------------
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:large-blue-cutout&width=100&height=100
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:large-blue-cutout&width=200&height=150
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:large-blue-cutout&width=300&height=100
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&attribution=mapbox
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&attribution=mapbox-small
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&attribution=small
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&attribution=none
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&width=333&height=217&zoom=13
+
+# --- Basemaps ---------------------------------------------------------------------------------
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=streets
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=satellite
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=hybrid
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=topo
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=gray
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=gray-background
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=oceans
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=national-geographic
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=osm
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=stamen-toner
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=stamen-watercolor
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=no-such-basemap
+
+# --- Paths (drawn with Imagick) -----------------------------------------------------------------
+/map/img?path[]=[-122.67,45.52],[-122.68,45.53],[-122.69,45.51]&width=400&height=300
+/map/img?path[]=[-122.67,45.52],[-122.68,45.53],[-122.69,45.51];color:ff0000;weight:6&width=400&height=300
+/map/img?path[]=[-122.67,45.52],[-122.68,45.53],[-122.69,45.51];color:0000ff;weight:4&bezier=30&width=400&height=300
+/map/img?path[]=[-122.67,45.52],[-122.75,45.53];color:0000ff&bezier=-20&width=400&height=300
+/map/img?path[]=[-122.67,45.52],[-122.67,45.60];color:0000ff&bezier=25&width=400&height=300
+/map/img?path[]=[-122.67,45.52],[-122.68,45.53]&path[]=[-122.70,45.50],[-122.71,45.49];color:00aa00&marker[]=lat:45.52;lng:-122.67;icon:dot-large-red&width=500&height=300
+/map/img?path=[-122.67,45.52],[-122.68,45.53];color:333333;weight:2&width=300&height=200
+/map/img?path[]=not-a-path&width=300&height=200
+
+# --- Zoom ------------------------------------------------------------------------------------------
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&marker[]=lat:35.66;lng:139.75;icon:small-red-cutout&width=600&height=300
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&marker[]=lat:45.53;lng:-122.66;icon:small-red-cutout&maxzoom=5
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=1
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=19&width=256&height=256
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=12.5
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=12&width=300.5&height=200
+/map/img?path[]=[-122.67,45.52],[-122.68,45.53];color:ff0000&marker[]=lat:45.52;lng:-122.67;icon:large-red-cutout&width=300.5&height=200.5
+
+# --- Formats -------------------------------------------------------------------------------------------
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&format=jpg
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&format=jpeg&quality=95
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&format=gif
+
+# --- Geocoded locations ------------------------------------------------------------------------------------
+/map/img?marker[]=location:Tokyo+Tower;icon:small-red-cutout&width=300&height=200
+/map/img?marker[]=location:nowhere+at+all;icon:small-red-cutout&width=300&height=200
+/map/img?location=309+SW+6th+Ave,+Portland,+OR&zoom=14&width=300&height=200
+
+# --- Invalid markers --------------------------------------------------------------------------------------------
+/map/img?marker[]=lat:45.5165;lng:-122.6764&width=300&height=200
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:no-such-icon&width=300&height=200
+/map/img?marker[]=garbage&width=300&height=200
+
+# --- Custom tiles and external icons need a token ------------------------------------------------------------------
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=custom&tileurl=https://tiles.example/{z}/{x}/{y}.png&token=test-token
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=custom&tileurl=https://tiles.example/{z}/{x}/{y}.png
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=custom&tileurl=https://tiles.example/{z}/{x}/{y}.png&token=wrong-token
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:https://icons.example/pin.png&token=test-token&width=300&height=200
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:https://icons.example/pin.png&width=300&height=200
+/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:https://icons.example/not-an-image.png&token=test-token&width=300&height=200
+
+# --- POST and bad sizes -----------------------------------------------------------------------------------------------
+POST /map/img | marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&width=300&height=200
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=12&width=abc
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=12&width=-20
+/map/img?latitude=45.5165&longitude=-122.6764&zoom=12&width=0&height=0

@@ -71,7 +71,7 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
             // Only allow external referenced icons from authenticated requests
             if($is_authenticated) {
               // Looks like an external image, attempt to download it
-              $ch = curl_init($properties['icon']);
+              $ch = curl_init(\p3k\Upstream::url($properties['icon']));
               curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
               curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
               $img = curl_exec($ch);
@@ -331,7 +331,7 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
       $url = urlForTile($x, $y, $zoom, $tileURL);
       $urls[] = $url;
       $tiles[$x][$y] = false;
-      $chs[$x][$y] = curl_init($url);
+      $chs[$x][$y] = curl_init(\p3k\Upstream::url($url));
       curl_setopt($chs[$x][$y], CURLOPT_RETURNTRANSFER, TRUE);
       curl_setopt($chs[$x][$y], CURLOPT_FOLLOWLOCATION, true);
       curl_multi_add_handle($mh, $chs[$x][$y]);
@@ -339,7 +339,7 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
       if($overlayURL) {
         $url = urlForTile($x, $y, $zoom, $overlayURL);
         $overlays[$x][$y] = false;
-        $ochs[$x][$y] = curl_init($url);
+        $ochs[$x][$y] = curl_init(\p3k\Upstream::url($url));
         curl_setopt($ochs[$x][$y], CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ochs[$x][$y], CURLOPT_FOLLOWLOCATION, TRUE);
         curl_multi_add_handle($mh, $ochs[$x][$y]);
