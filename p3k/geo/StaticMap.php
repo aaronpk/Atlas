@@ -281,7 +281,7 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
 
 
 
-  $im = imagecreatetruecolor($width, $height);
+  $im = imagecreatetruecolor(px($width), px($height));
 
   // Find the pixel coordinate of the center of the map
   $center = webmercator\latLngToPixels($latitude, $longitude, $zoom);
@@ -389,7 +389,7 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
       $ox = (($x - $tilePos['x']) * WebMercator\TILE_SIZE) - $pos['x'] + ($width/2);
       $oy = (($y - $tilePos['y']) * WebMercator\TILE_SIZE) - $pos['y'] + ($height/2);
 
-      imagecopy($im, $tile, $ox,$oy, 0,0, imagesx($tile),imagesy($tile));
+      imagecopy($im, $tile, px($ox),px($oy), 0,0, imagesx($tile),imagesy($tile));
     }
   }
 
@@ -402,7 +402,7 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
         $ox = (($x - $tilePos['x']) * WebMercator\TILE_SIZE) - $pos['x'] + ($width/2);
         $oy = (($y - $tilePos['y']) * WebMercator\TILE_SIZE) - $pos['y'] + ($height/2);
 
-        imagecopy($im, $tile, $ox,$oy, 0,0, imagesx($tile),imagesy($tile));
+        imagecopy($im, $tile, px($ox),px($oy), 0,0, imagesx($tile),imagesy($tile));
       }
     }
   }
@@ -411,7 +411,7 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
   if(count($paths)) {
     // Draw the path with ImageMagick because GD sucks as anti-aliased lines
     $mg = new Imagick();
-    $mg->newImage($width, $height, new ImagickPixel('none'));
+    $mg->newImage(px($width), px($height), new ImagickPixel('none'));
 
     $draw = new ImagickDraw();
 
@@ -495,7 +495,7 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
     $mg->setImageFormat("png");
 
     $pathImg = imagecreatefromstring($mg);
-    imagecopy($im, $pathImg, 0,0, 0,0, $width,$height);
+    imagecopy($im, $pathImg, 0,0, 0,0, px($width),px($height));
   }
 
 
@@ -541,17 +541,17 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
       );
     }
 
-    imagecopy($im, $markerImg, $iconPos['x'],$iconPos['y'], 0,0, imagesx($markerImg),imagesy($markerImg));
+    imagecopy($im, $markerImg, px($iconPos['x']),px($iconPos['y']), 0,0, imagesx($markerImg),imagesy($markerImg));
   }
 
 
   if(k($params,'attribution') == 'mapbox') {
     $logo = imagecreatefrompng($assetPath . '/mapbox-attribution.png');
-    imagecopy($im, $logo, $width-imagesx($logo), $height-imagesy($logo), 0,0, imagesx($logo),imagesy($logo));
+    imagecopy($im, $logo, px($width-imagesx($logo)), px($height-imagesy($logo)), 0,0, imagesx($logo),imagesy($logo));
   } elseif(k($params,'attribution') == 'mapbox-small') {
     $logo = imagecreatefrompng($assetPath . '/mapbox-attribution.png');
     $shrinkFactor = 2;
-    imagecopyresampled($im, $logo, $width-round(imagesx($logo)/$shrinkFactor), $height-round(imagesy($logo)/$shrinkFactor), 0,0, round(imagesx($logo)/$shrinkFactor),round(imagesy($logo)/$shrinkFactor), imagesx($logo),imagesy($logo));
+    imagecopyresampled($im, $logo, px($width-round(imagesx($logo)/$shrinkFactor)), px($height-round(imagesy($logo)/$shrinkFactor)), 0,0, round(imagesx($logo)/$shrinkFactor),round(imagesy($logo)/$shrinkFactor), imagesx($logo),imagesy($logo));
 
   } elseif(k($params,'attribution') != 'none') {
     $logo = imagecreatefrompng($assetPath . '/powered-by-esri.png');
@@ -560,9 +560,9 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
     if($width > 120) {
       if($width < 220 || k($params, 'attribution') == 'small') {
         $shrinkFactor = 2;
-        imagecopyresampled($im, $logo, $width-round(imagesx($logo)/$shrinkFactor)-4, $height-round(imagesy($logo)/$shrinkFactor)-4, 0,0, round(imagesx($logo)/$shrinkFactor),round(imagesy($logo)/$shrinkFactor), imagesx($logo),imagesy($logo));
+        imagecopyresampled($im, $logo, px($width-round(imagesx($logo)/$shrinkFactor)-4), px($height-round(imagesy($logo)/$shrinkFactor)-4), 0,0, round(imagesx($logo)/$shrinkFactor),round(imagesy($logo)/$shrinkFactor), imagesx($logo),imagesy($logo));
       } else {
-        imagecopy($im, $logo, $width-imagesx($logo)-4, $height-imagesy($logo)-4, 0,0, imagesx($logo),imagesy($logo));
+        imagecopy($im, $logo, px($width-imagesx($logo)-4), px($height-imagesy($logo)-4), 0,0, imagesx($logo),imagesy($logo));
       }
     }
   }
@@ -584,7 +584,6 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
       break;
   }
   $data = ob_get_clean();
-  imagedestroy($im);
 
   /**
    * http://msdn.microsoft.com/en-us/library/bb259689.aspx
@@ -607,6 +606,16 @@ function generate($params, $filename, $assetPath, $is_authenticated=false) {
     echo $image['data'];
   }
   return $image;
+}
+
+/**
+ * Pixel positions and sizes are computed as floats (and width/height arrive
+ * as strings), but GD and Imagick take integers. PHP 7 truncated them toward
+ * zero; PHP 8.1+ does the same but warns that precision is lost, so convert
+ * explicitly the way PHP 7 did.
+ */
+function px($v) {
+  return (int)$v;
 }
 
 function urlForTile($x, $y, $z, $tileURL) {
