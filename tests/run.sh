@@ -51,12 +51,14 @@ for port in 18380 18381; do
   for i in $(seq 50); do curl -s -o /dev/null "http://127.0.0.1:$port/" && break; sleep 0.1; done
 done
 
-# Values that change on every run: the current time, and the paths of this run
+# Values that change on every run: the current time (and today's sunrise and
+# sunset, checked by tests/sun.php instead), and the paths of this run
 # (the old Slim app prints stack traces on errors). curl -I also writes the
 # headers to the body file, so Date lines are dropped everywhere.
 mask() {
   sed -E -e "s#$OUT/app#<app>#g; s#$OUT#<out>#g; s#$APP#<checkout>#g" \
     -e 's/"localtime":"[^"]*"/"localtime":"<now>"/g; s/"now":[0-9.]+/"now":"<now>"/g' \
+    -e 's/"(sunrise|sunset)":(-?[0-9.]+|null)/"\1":"<today>"/g; s/"light":"(day|night)"/"light":"<now>"/g' \
     -e '/^[Dd]ate: /d'
 }
 
