@@ -8,7 +8,7 @@ class Geocode {
 
   public static function lookup(App $app, $params) {
     if(
-      (App::k($params, 'latitude') !== null && App::k($params, 'longitude') !== null)
+      (App::has($params, 'latitude') && App::has($params, 'longitude'))
       || App::k($params, 'input') !== null
     ) {
 

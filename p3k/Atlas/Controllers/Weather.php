@@ -7,7 +7,7 @@ use p3k\Atlas\Response;
 class Weather {
 
   public static function lookup(App $app, $params) {
-    if(App::k($params, 'latitude') !== null && App::k($params, 'longitude') !== null && App::k($params, 'apikey') !== null) {
+    if(App::has($params, 'latitude') && App::has($params, 'longitude') && App::k($params, 'apikey') !== null) {
 
       $lat = (float)$params['latitude'];
       $lng = (float)$params['longitude'];

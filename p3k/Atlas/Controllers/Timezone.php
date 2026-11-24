@@ -29,7 +29,7 @@ class Timezone {
   }
 
   public static function lookup(App $app, $params) {
-    if(App::k($params, 'latitude') !== null && App::k($params, 'longitude') !== null) {
+    if(App::has($params, 'latitude') && App::has($params, 'longitude')) {
 
       $lat = (float)$params['latitude'];
       $lng = (float)$params['longitude'];

@@ -90,6 +90,14 @@ class App {
   }
 
   /**
+   * Whether $a[$k] was given at all. Unlike k(), "0" counts, so coordinates
+   * on the equator or the prime meridian are accepted.
+   */
+  public static function has($a, $k) {
+    return is_array($a) && array_key_exists($k, $a) && $a[$k] !== '' && $a[$k] !== null;
+  }
+
+  /**
    * Requests that carry one of the API keys listed in data/apikeys.txt may
    * use custom tile URLs and external marker icons.
    */

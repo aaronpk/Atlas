@@ -80,7 +80,7 @@ while IFS= read -r line; do
     echo "$method $line${body:+ | $body}"
     grep -iv '^date:' "$OUT/h.tmp" | tr -d '\r' | sed -E 's/^HTTP\/1\.[01] /HTTP\/1.x /'
     if grep -qi '^content-type: image/' "$OUT/h.tmp"; then
-      ext=$(grep -i '^content-type:' "$OUT/h.tmp" | sed -E 's#.*image/([a-z]+).*#\1#' | tr -d '\r')
+      ext=$(grep -i '^content-type:' "$OUT/h.tmp" | head -1 | sed -E 's#.*image/([a-z]+).*#\1#' | tr -d '\r')
       cp "$OUT/b.tmp" "$OUT/images/$name.$ext"
       $FIXTURE_PHP "$HERE/pixels.php" "$OUT/b.tmp"
     else

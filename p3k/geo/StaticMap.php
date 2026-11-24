@@ -152,9 +152,9 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
   $defaultLatitude = $bounds['minLat'] + (($bounds['maxLat'] - $bounds['minLat']) / 2);
   $defaultLongitude = $bounds['minLng'] + (($bounds['maxLng'] - $bounds['minLng']) / 2);
 
-  if(k($params,'latitude') !== false) {
-    $latitude = k($params,'latitude');
-    $longitude = k($params,'longitude');
+  if(has($params,'latitude')) {
+    $latitude = $params['latitude'];
+    $longitude = has($params,'longitude') ? $params['longitude'] : false;
   } elseif(k($params,'location') !== false) {
     $result = Geocoder::geocode(k($params,'location'));
     if(!$result || $result->latitude === null) {
@@ -170,13 +170,14 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
   }
 
 
-  $width = k($params, 'width', 300);
-  $height = k($params, 'height', 300);
+  // Whole pixels from the start, so the map is centered on the image actually drawn
+  $width = px(k($params, 'width', 300));
+  $height = px(k($params, 'height', 300));
 
 
   // If no zoom is specified, choose a zoom level that will fit all the markers and the path
-  if(k($params,'zoom')) {
-    $zoom = k($params,'zoom');
+  if(has($params,'zoom')) {
+    $zoom = $params['zoom'];
   } else {
 
     // start at max zoom level (20)
@@ -206,8 +207,8 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
     $zoom = $fitZoom;
   }
 
-  if(k($params,'maxzoom') && k($params,'maxzoom') < $zoom) {
-    $zoom = k($params,'maxzoom');
+  if(has($params,'maxzoom') && $params['maxzoom'] < $zoom) {
+    $zoom = $params['maxzoom'];
   }
 
   $minZoom = 2;
@@ -610,12 +611,21 @@ function generate($params, $filename, $assetPath, $is_authenticated=false) {
 
 /**
  * Pixel positions and sizes are computed as floats (and width/height arrive
- * as strings), but GD and Imagick take integers. PHP 7 truncated them toward
- * zero; PHP 8.1+ does the same but warns that precision is lost, so convert
- * explicitly the way PHP 7 did.
+ * as strings), but GD and Imagick take integers. Round down, so tiles on
+ * either side of the center stay exactly 256px apart. (Truncating toward zero,
+ * as PHP 7 did implicitly, moved negative offsets the other way and left a
+ * 1px overlap where tiles met on maps with an odd width or height.)
  */
 function px($v) {
-  return (int)$v;
+  return (int)floor((float)$v);
+}
+
+/**
+ * Whether $a[$k] was given at all. Unlike k(), "0" counts, so latitude 0,
+ * longitude 0 and zoom 0 are not ignored.
+ */
+function has($a, $k) {
+  return is_array($a) && array_key_exists($k, $a) && $a[$k] !== '' && $a[$k] !== null;
 }
 
 function urlForTile($x, $y, $z, $tileURL) {

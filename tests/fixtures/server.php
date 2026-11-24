@@ -18,8 +18,9 @@ function json($data, $code = 200) {
   exit;
 }
 
-// A 256x256 tile whose colors are derived from its URL, with a grid line on
-// the left and top edges, so misplaced or missing tiles show up in the output
+// A 256x256 tile whose colors are derived from its URL, with a dark line on the
+// left and top edges and a red one on the right and bottom edges, so misplaced,
+// overlapping or missing tiles show up in the output
 function tile($key, $alpha = false) {
   $h = md5($key);
   $im = imagecreatetruecolor(256, 256);
@@ -36,6 +37,9 @@ function tile($key, $alpha = false) {
     $line = imagecolorallocate($im, 40, 40, 40);
     imageline($im, 0, 0, 255, 0, $line);
     imageline($im, 0, 0, 0, 255, $line);
+    $edge = imagecolorallocate($im, 200, 40, 40);
+    imageline($im, 255, 0, 255, 255, $edge);
+    imageline($im, 0, 255, 255, 255, $edge);
     imagefilledellipse($im, 128, 128, 40, 40, imagecolorallocate($im, hexdec($h[6].$h[7]), hexdec($h[8].$h[9]), 200));
   }
   header('Content-Type: image/png');
