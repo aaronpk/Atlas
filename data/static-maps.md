@@ -27,12 +27,6 @@ Parameters can be included in either the query string or in the POST body.
   * `oceans` - Esri [ocean basemap](http://www.arcgis.com/home/webmap/viewer.html?webmap=5ae9e138a17842688b0b79283a4353f6&center=-122.255816,36.573652&level=8)
   * `national-geographic` - [National Geographic basemap](http://www.arcgis.com/home/webmap/viewer.html?webmap=d94dcdbe78e141c2b2d3a91d5ca8b9c9)
   * `osm` - [Open Street Map](http://www.openstreetmap.org/)
-  * `stamen-toner` - [Stamen Toner](http://maps.stamen.com/toner/) black and white map with labels
-  * `stamen-toner-background` - [Stamen Toner](http://maps.stamen.com/toner-background/) map without labels
-  * `stamen-toner-lite` - [Stamen Toner Light](http://maps.stamen.com/toner-lite/) with labels
-  * `stamen-terrain` - [Stamen Terrain](http://maps.stamen.com/terrain/) with labels
-  * `stamen-terrain-background` - [Stamen Terrain](http://maps.stamen.com/terrain-background/) without labels
-  * `stamen-watercolor` - [Stamen Watercolor](http://maps.stamen.com/watercolor/)
 * `tileurl` - To use other map tiles, you can provide the tile URL pattern. Make sure to include the literal strings `{x}` `{y}` `{z}` in the URL which will be replaced with the appropriate tile number when generating the map
 * `attribution` - default `none` - `none | esri | mapbox` - If you add attribution on the image in some other way, you can set this to "none", otherwise you can include the default esri or mapbox attributions
 * `latitude` - optional - Latitude to center the map at. Not needed if using the location parameter, or if specifying one or more markers.

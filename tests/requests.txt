@@ -80,8 +80,6 @@ POST / | a=1
 /map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=oceans
 /map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=national-geographic
 /map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=osm
-/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=stamen-toner
-/map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=stamen-watercolor
 /map/img?latitude=45.5165&longitude=-122.6764&zoom=11&basemap=no-such-basemap
 
 # --- Paths (drawn with Imagick) -----------------------------------------------------------------

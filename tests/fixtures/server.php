@@ -123,11 +123,6 @@ if($path === '/icons.example/not-an-image.png') {
 }
 
 // --- Map tiles ----------------------------------------------------------------------------
-if(preg_match('#^/tile\.stamen\.com/#', $path)) {
-  // Stamen's tile servers are gone; requests fail
-  http_response_code(404);
-  exit;
-}
 if(preg_match('#/(Reference|World_Light_Gray_Reference)/MapServer/tile/#', $path))
   tile($path, true);
 if(preg_match('#^/[a-z0-9.-]+/.*/\d+/\d+/\d+(\.png)?$#', $path))

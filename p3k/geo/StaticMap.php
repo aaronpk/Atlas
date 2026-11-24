@@ -245,24 +245,6 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
     'osm' => array(
       'https://tile.openstreetmap.org/{Z}/{X}/{Y}.png'
     ),
-    'stamen-toner' => array(
-      'http://tile.stamen.com/toner/{Z}/{X}/{Y}.png'
-    ),
-    'stamen-toner-background' => array(
-      'http://tile.stamen.com/toner-background/{Z}/{X}/{Y}.png'
-    ),
-    'stamen-toner-lite' => array(
-      'http://tile.stamen.com/toner-lite/{Z}/{X}/{Y}.png'
-    ),
-    'stamen-terrain' => array(
-      'http://tile.stamen.com/terrain/{Z}/{X}/{Y}.png'
-    ),
-    'stamen-terrain-background' => array(
-      'http://tile.stamen.com/terrain-background/{Z}/{X}/{Y}.png'
-    ),
-    'stamen-watercolor' => array(
-      'http://tile.stamen.com/watercolor/{Z}/{X}/{Y}.png'
-    ),
   );
 
   if(k($params,'basemap') && k($tileServices, k($params,'basemap'))) {
