@@ -1,49 +1,54 @@
-<header>
-  <h1>Atlas</h1>
-  <p>Atlas is a set of APIs for looking up information about locations.</p>
+<header class="hero">
+  <div class="wrap">
+    <h1>Atlas</h1>
+    <p class="lede">A set of APIs for looking up information about locations: timezones, geocoding, current weather, and static map images.</p>
+  </div>
 </header>
 
-<div class="page">
+<main class="wrap">
 
-  <h2><i class="fa fa-clock-o"></i> Timezone</h2>
-
-    <h3>Retrieving the timezone at a lat/lng</h3>
-
-    <ul>
-      <li><a href="/api/timezone?latitude=45.5118&amp;longitude=-122.6433">/api/timezone?latitude=45.5118&amp;longitude=-122.6433</a></li>
-      <li><a href="/api/timezone?airport=PDX">/api/timezone?airport=PDX</a></li>
+  <section class="card" id="timezone">
+    <h2><span class="icon"><i class="fa fa-clock-o"></i></span> Timezone</h2>
+    <p>The timezone at a latitude/longitude, or at an airport by its IATA code, with the current offset and local time.</p>
+    <ul class="endpoints">
+      <li><a href="/api/timezone?latitude=45.5118&amp;longitude=-122.6433"><span class="method">GET</span><code>/api/timezone?latitude=45.5118&amp;longitude=-122.6433</code></a></li>
+      <li><a href="/api/timezone?airport=PDX"><span class="method">GET</span><code>/api/timezone?airport=PDX</code></a></li>
     </ul>
+  </section>
 
-  <h2><i class="fa fa-globe"></i> Geocoder</h2>
-
-    <h3>Retrieving the lat/lng for a named location</h3>
-
-    <ul>
-      <li><a href="/api/geocode?input=309+SW+6th+Ave,+Portland,+OR">/api/geocode?input=309+SW+6th+Ave,+Portland,+OR</a></li>
+  <section class="card" id="geocoder">
+    <h2><span class="icon"><i class="fa fa-globe"></i></span> Geocoder</h2>
+    <h3>The latitude/longitude of a named location</h3>
+    <ul class="endpoints">
+      <li><a href="/api/geocode?input=309+SW+6th+Ave,+Portland,+OR"><span class="method">GET</span><code>/api/geocode?input=309+SW+6th+Ave,+Portland,+OR</code></a></li>
     </ul>
-
-    <h3>Retrieving a named location from a lat/lng</h3>
-
-    <ul>
-      <li><a href="/api/geocode?latitude=45.5118&amp;longitude=-122.6433">/api/geocode?latitude=45.5118&amp;longitude=-122.6433</a></li>
-      <li><a href="/api/geocode?latitude=45.5118&amp;longitude=-122.6433&date=2016-07-12T09:00:00Z">/api/geocode?latitude=45.5118&amp;longitude=-122.6433&date=2016-07-012T09:00:00Z</a> and return the local time of the given timestamp</li>
+    <h3>The named location at a latitude/longitude</h3>
+    <ul class="endpoints">
+      <li><a href="/api/geocode?latitude=45.5118&amp;longitude=-122.6433"><span class="method">GET</span><code>/api/geocode?latitude=45.5118&amp;longitude=-122.6433</code></a></li>
+      <li><a href="/api/geocode?latitude=45.5118&amp;longitude=-122.6433&amp;date=2016-07-12T09:00:00Z"><span class="method">GET</span><code>/api/geocode?latitude=45.5118&amp;longitude=-122.6433&amp;date=2016-07-12T09:00:00Z</code></a>
+        <span class="note">Also returns the local time of the given timestamp.</span></li>
     </ul>
+  </section>
 
-  <h2><i class="fa fa-sun-o"></i> Weather</h2>
-
-    <h3>Retrieving the current weather for a lat/lng</h3>
-
-    <ul>
-      <li><a href="/api/weather?latitude=45.5118&amp;longitude=-122.6433&amp;apikey=XXX">/api/weather?latitude=45.5118&amp;longitude=-122.6433&amp;apikey=XXX</a></li>
+  <section class="card" id="weather">
+    <h2><span class="icon"><i class="fa fa-sun-o"></i></span> Weather</h2>
+    <p>The current weather at a latitude/longitude, with today's sunrise and sunset.</p>
+    <ul class="endpoints">
+      <li><a href="/api/weather?latitude=45.5118&amp;longitude=-122.6433&amp;apikey=XXX"><span class="method">GET</span><code>/api/weather?latitude=45.5118&amp;longitude=-122.6433&amp;apikey=XXX</code></a></li>
     </ul>
+    <p class="note">Pass your own <a href="https://openweathermap.org/api">OpenWeatherMap</a> API key as <code>apikey</code>. Icon names refer to the <a href="https://erikflowers.github.io/weather-icons/">weather-icons</a> icon font.</p>
+  </section>
 
-    <p>You'll need to pass an OpenWeatherMap.org API key in the request. Icon names reference the <a href="https://erikflowers.github.io/weather-icons/">weather-icons</a> icon font.</p>
+  <section class="card" id="static-maps">
+    <h2><span class="icon"><i class="fa fa-map"></i></span> Static Maps</h2>
+    <p>Map images with markers and paths, from a choice of basemaps.</p>
+    <ul class="endpoints">
+      <li><a href="/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&amp;basemap=gray&amp;width=600&amp;height=240&amp;zoom=14"><span class="method">GET</span><code>/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&amp;basemap=gray&amp;width=600&amp;height=240&amp;zoom=14</code></a></li>
+    </ul>
+    <figure class="example">
+      <img src="/assets/sample-map.png" width="600" height="240" alt="A gray street map of downtown Portland with a blue marker">
+    </figure>
+    <p><a class="button" href="/static-maps">Static Maps API docs <i class="fa fa-arrow-right"></i></a></p>
+  </section>
 
-  <h2><i class="fa fa-map"></i> Static Maps</h2>
-
-    <p><a href="/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&amp;basemap=gray&amp;width=600&amp;height=240&amp;zoom=14">/map/img?marker[]=lat:45.5165;lng:-122.6764;icon:small-blue-cutout&amp;basemap=gray&amp;width=600&amp;height=240&amp;zoom=14</a></p>
-    <img src="/assets/sample-map.png" width="600"/>
-
-    <p><a href="/static-maps">Full API docs</a></p>
-
-</div>
+</main>

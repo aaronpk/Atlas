@@ -1,49 +1,491 @@
-body {
-  background-color: #fff;
+/* Atlas. Plain CSS on top of Pure's base styles; light and dark color schemes. */
+
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --text: #1d2330;
+  --muted: #5d6676;
+  --border: #e1e5ec;
+  --accent: #0a74c9;
+  --accent-hover: #075a9c;
+  --accent-soft: #e7f1fb;
+  --code-bg: #eef1f5;
+  --pre-bg: #1f2633;
+  --pre-text: #e6e9ef;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+  --radius: 10px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 }
 
-.page, footer, header {
-  max-width: 600px;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f131a;
+    --surface: #171c25;
+    --text: #e4e8ef;
+    --muted: #9aa4b5;
+    --border: #2a3140;
+    --accent: #5fb0f5;
+    --accent-hover: #8cc6f8;
+    --accent-soft: #16273a;
+    --code-bg: #232a36;
+    --pre-bg: #0b0e13;
+    --pre-text: #dde2ea;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+}
+
+html {
+  font-family: var(--font);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+code, pre {
+  font-family: var(--mono);
+  font-size: 0.875em;
+}
+code {
+  background: var(--code-bg);
+  padding: 0.12em 0.4em;
+  border-radius: 5px;
+  overflow-wrap: anywhere;
+}
+pre {
+  background: var(--pre-bg);
+  color: var(--pre-text);
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+pre code {
+  background: none;
+  padding: 0;
+  font-size: 1em;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.wrap {
+  max-width: 1080px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-header {
-  border-bottom: 4px #ccc solid;
+/* --- Top bar ------------------------------------------------------------- */
+
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.topbar .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 56px;
+  flex-wrap: wrap;
+}
+.topbar .brand {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.topbar .brand .fa {
+  color: var(--accent);
+}
+.topbar .brand:hover {
+  text-decoration: none;
+}
+.topbar .links {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.topbar .links a {
+  color: var(--muted);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 15px;
+}
+.topbar .links a:hover {
+  color: var(--text);
+  background: var(--code-bg);
+  text-decoration: none;
+}
+.topbar .links a[aria-current="page"] {
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 
-header h1 {
-  text-align: center;
-  font-weight: 100;
-  font-size: 55px;
-  margin: 60px 0 20px 0;
+/* --- Page header -------------------------------------------------------------- */
+
+.hero {
+  background: linear-gradient(135deg, var(--accent-soft), var(--bg) 70%);
+  border-bottom: 1px solid var(--border);
+  padding: 56px 0 40px;
+  margin-bottom: 32px;
 }
+.hero h1 {
+  margin: 0 0 8px;
+  font-size: clamp(36px, 6vw, 52px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 750;
+}
+.hero .lede {
+  margin: 0;
+  max-width: 640px;
+  font-size: 19px;
+  color: var(--muted);
+}
+
+/* --- Cards (API overview) -------------------------------------------------------- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+.card h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 8px;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+}
+.card h2 .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 20px;
+}
+.card h3 {
+  font-size: 16px;
+  margin: 20px 0 8px;
+}
+.card p {
+  margin: 8px 0;
+}
+
+.endpoints {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+.endpoints li {
+  margin: 8px 0;
+}
+.endpoints a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+}
+.endpoints a:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  text-decoration: none;
+}
+.endpoints code {
+  background: none;
+  padding: 0;
+}
+.method {
+  flex: none;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: #1f9d55;
+  padding: 2px 7px;
+  border-radius: 5px;
+  position: relative;
+  top: -1px;
+}
+.note {
+  display: block;
+  color: var(--muted);
+  font-size: 14px;
+  margin: 6px 2px 0;
+}
+
+.example {
+  margin: 16px 0;
+}
+.example img, .docs p > img:only-child {
+  display: block;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #fff;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.button:hover {
+  background: var(--accent-hover);
+  color: #fff;
+  text-decoration: none;
+}
+@media (prefers-color-scheme: dark) {
+  .button, .button:hover { color: #0f131a; }
+}
+
+/* --- Docs page ---------------------------------------------------------------------- */
+
+.docs-layout {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+}
+.toc {
+  position: sticky;
+  top: 80px;
+  font-size: 14px;
+}
+.toc-title {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 2px solid var(--border);
+}
+.toc a {
+  display: block;
+  padding: 4px 12px;
+  margin-left: -2px;
+  border-left: 2px solid transparent;
+  color: var(--muted);
+}
+.toc a:hover {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  text-decoration: none;
+}
+
+.docs {
+  min-width: 0;
+  max-width: 760px;
+}
+.docs h2 {
+  font-size: 26px;
+  letter-spacing: -0.01em;
+  margin: 40px 0 12px;
+  padding-top: 8px;
+  scroll-margin-top: 72px;
+}
+.docs h2:first-child {
+  margin-top: 0;
+}
+.docs h3 {
+  font-size: 19px;
+  margin: 28px 0 8px;
+  scroll-margin-top: 72px;
+}
+.docs .anchor {
+  visibility: hidden;
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: 4px;
+}
+.docs h2:hover .anchor, .docs h3:hover .anchor, .docs .anchor:focus {
+  visibility: visible;
+  text-decoration: none;
+}
+
+/* Parameter lists */
+.docs > ul {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.docs > ul > li {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+}
+.docs > ul > li:first-child {
+  border-top: none;
+}
+.docs li.param > code.name {
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.docs .tag {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0 8px;
+  margin: 0 2px;
+}
+.docs .tag code {
+  background: none;
+  padding: 0;
+  font-size: 1em;
+}
+/* Nested lists, e.g. the basemaps */
+.docs li ul {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0 0 0 4px;
+}
+.docs li li {
+  padding: 3px 0;
+}
+.docs li li.param > code.name {
+  font-weight: 600;
+}
+
+/* Built-in marker images */
+.docs > ul.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 8px;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+.docs > ul.icon-grid > li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  min-height: 52px;
+}
+.icon-grid img {
+  flex: none;
+  max-height: 40px;
+}
+.icon-grid code {
+  background: none;
+  padding: 0;
+  font-size: 13px;
+}
+
+/* --- Small pages (/map) ---------------------------------------------------------- */
+
+header:not(.hero) {
+  max-width: 1080px;
+  margin: 48px auto;
+  padding: 0 20px;
+}
+
+/* --- Footer ---------------------------------------------------------------------------- */
 
 footer {
-  margin-top: 40px;
-  font-size: 12px;
-  border-top: 4px #ccc solid;
+  margin-top: 56px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 14px;
 }
-footer .right {
-  float: right;
+footer .wrap {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  flex-wrap: wrap;
 }
-
-.page h2 {
-  border-bottom: 1px #ccc solid;
-}
-
-a {
-  color: #08c;
-}
-a:hover {
-  color: #005580;
-}
-
-h2 i.fa {
-  font-size: 42px;
+footer a {
+  color: var(--muted);
 }
 
-.docs li {
-  line-height: 1.2em;
-  margin-top: 0.4em;
+/* --- Narrow screens ------------------------------------------------------------------ */
+
+@media (max-width: 860px) {
+  .docs-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .toc {
+    position: static;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 24px;
+  }
+  .toc ul {
+    border-left: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+  }
+  .toc a {
+    padding: 2px 0;
+    border-left: none;
+    margin-left: 0;
+  }
+}
+@media (max-width: 560px) {
+  .hero { padding: 36px 0 28px; margin-bottom: 20px; }
+  .card { padding: 18px 16px; }
+  .endpoints a { flex-direction: column; gap: 4px; }
+  .docs > ul > li { padding: 10px 12px; }
 }

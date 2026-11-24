@@ -17,8 +17,8 @@ Parameters can be included in either the query string or in the POST body.
 * `maxzoom` - optional - When a zoom level is chosen automatically, this sets an upper limit on the zoom level that will be chosen. Useful if you know your basemaps don't have imagery past a certain zoom level.
 * `width` - default 300 - Width in pixels of the final image
 * `height` - default 300 - Height in pixels of the final image
-* `basemap` - default "streets" - Select the basemap
-  * `streets` - Default [Esri street basemap](http://www.arcgis.com/home/webmap/viewer.html?webmap=7990d7ea55204450b8110d57e20c99ab)
+* `basemap` - optional - Select the basemap. Without one, or with an unknown name, the map uses the Esri gray canvas without labels (the same as `gray-background`)
+  * `streets` - [Esri street basemap](http://www.arcgis.com/home/webmap/viewer.html?webmap=7990d7ea55204450b8110d57e20c99ab)
   * `satellite` - Esri's [satellite basemap](http://www.arcgis.com/home/webmap/viewer.html?webmap=d802f08316e84c6592ef681c50178f17&center=-71.055499,42.364247&level=15)
   * `hybrid` - Satellite basemap with labels
   * `topo` - Esri [topographic map](http://www.arcgis.com/home/webmap/viewer.html?webmap=a72b0766aea04b48bf7a0e8c27ccc007)
@@ -28,7 +28,7 @@ Parameters can be included in either the query string or in the POST body.
   * `national-geographic` - [National Geographic basemap](http://www.arcgis.com/home/webmap/viewer.html?webmap=d94dcdbe78e141c2b2d3a91d5ca8b9c9)
   * `osm` - [Open Street Map](http://www.openstreetmap.org/)
 * `tileurl` - To use other map tiles, you can provide the tile URL pattern. Make sure to include the literal strings `{x}` `{y}` `{z}` in the URL which will be replaced with the appropriate tile number when generating the map
-* `attribution` - default `none` - `none | esri | mapbox` - If you add attribution on the image in some other way, you can set this to "none", otherwise you can include the default esri or mapbox attributions
+* `attribution` - default `esri` - One of `esri`, `small`, `mapbox`, `mapbox-small` or `none`. Adds the Esri or Mapbox logo to the bottom right corner of the image. `small` and `mapbox-small` draw it at half size; the Esri logo is always half size on images narrower than 220px, and left off at 120px wide or narrower. If you add attribution in some other way, set this to `none`
 * `latitude` - optional - Latitude to center the map at. Not needed if using the location parameter, or if specifying one or more markers.
 * `longitude` - optional - Longitude to center the map at.
 * `location` - optional - Free-form text that will be geocoded to center the map. Not needed if specifying a location with the latitude and longitude parameters, or if a marker is specified.
