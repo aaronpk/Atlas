@@ -1,7 +1,8 @@
 <?php
-// Checks for two bugs that predate the PHP 8 upgrade:
+// Checks for bugs that predate the PHP 8 upgrade:
 //  - tiles were placed 1px off on maps with an odd width or height
 //  - 0 was treated as a missing latitude, longitude or zoom
+//  - an invalid map width or height was a 500
 //
 //   php tests/regressions.php
 // Starts tests/fixtures/server.php on 127.0.0.1:18382 for the upstream services.
@@ -93,6 +94,31 @@ check(count($t) > 0 && count(preg_grep('#^2/#', $t)) === count($t), "zoom=0 draw
 // maxzoom=0 caps the fitted zoom, then the minimum applies
 $t = $tiles(['marker' => ['lat:45.5165;lng:-122.6764;icon:small-blue-cutout'], 'maxzoom' => '0']);
 check(count($t) > 0 && count(preg_grep('#^2/#', $t)) === count($t), "maxzoom=0 caps the zoom at 2: " . json_encode($t));
+
+// --- An invalid width or height is a 400, not a 500 -----------------------------------------------
+$map = function($params) use($app) {
+  $r = $app->dispatch('GET', '/map/img', $params);
+  return [$r->status, $r->headers['Content-Type'] ?? '', $r->body];
+};
+foreach([['width' => 'abc'], ['width' => '-20'], ['width' => '0.5'], ['height' => 'abc'], ['width' => '300px'], ['height' => '-1']] as $bad) {
+  $since = count(file($log));
+  list($status, $type, $body) = $map($bad + ['latitude' => '45.5', 'longitude' => '-122.6', 'zoom' => '12',
+    'marker' => ['location:Tokyo Tower;icon:small-red-cutout']]);
+  $json = json_decode($body, true);
+  $name = key($bad);
+  check($status === 400 && $type === 'application/json' && ($json['error'] ?? '') === 'invalid_request'
+    && strpos($json['error_description'] ?? '', $name) === 0, "$name=" . current($bad) . " is a 400 naming $name: $status $body");
+  check(upstream($log, $since) === [], "$name=" . current($bad) . " is rejected before geocoding or fetching tiles");
+}
+$threw = false;
+try { p3k\geo\StaticMap\render(['width' => 'abc']); } catch(InvalidArgumentException $e) { $threw = true; }
+check($threw, "render() throws InvalidArgumentException for an invalid width");
+// Still valid: fractional sizes round down, and 0 or empty means the default 300
+foreach([['300.5', '200.5', 300, 200], ['0', '0', 300, 300], ['', '150', 300, 150], [' 64', '64 ', 64, 64]] as list($w, $h, $ew, $eh)) {
+  list($status, $type, $body) = $map(['latitude' => '45.5', 'longitude' => '-122.6', 'zoom' => '12', 'width' => $w, 'height' => $h]);
+  $im = $status === 200 ? imagecreatefromstring($body) : false;
+  check($im && imagesx($im) === $ew && imagesy($im) === $eh, "width=" . json_encode($w) . " height=" . json_encode($h) . " renders {$ew}x{$eh}: $status");
+}
 
 echo ($fail ? "FAILED" : "ok") . ": $n checks, $fail failed (" . PHP_VERSION . ")\n";
 exit($fail ? 1 : 0);

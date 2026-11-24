@@ -19,11 +19,26 @@ function defaultAssetPath() {
  * buffer and no headers are sent, so this is safe to call from any app.
  *
  * Returns ['data' => string, 'contentType' => 'image/png'|'image/jpeg'].
+ * Throws InvalidArgumentException when width or height is not a positive
+ * number of pixels.
  */
 function render($params, $assetPath = null, $isAuthenticated = false) {
   if ($assetPath === null) {
     $assetPath = defaultAssetPath();
   }
+
+  // Whole pixels from the start, so the map is centered on the image actually
+  // drawn. Checked before any geocoding or tile fetching. A missing (or 0)
+  // width or height means the default 300.
+  $width = k($params, 'width', 300);
+  $height = k($params, 'height', 300);
+  foreach(['width' => $width, 'height' => $height] as $name => $value) {
+    if(!is_numeric($value) || px($value) < 1) {
+      throw new \InvalidArgumentException("$name must be a positive number of pixels");
+    }
+  }
+  $width = px($width);
+  $height = px($height);
   $is_authenticated = $isAuthenticated;
 
   $bounds = array(
@@ -169,10 +184,6 @@ function render($params, $assetPath = null, $isAuthenticated = false) {
     $longitude = $defaultLongitude;
   }
 
-
-  // Whole pixels from the start, so the map is centered on the image actually drawn
-  $width = px(k($params, 'width', 300));
-  $height = px(k($params, 'height', 300));
 
 
   // If no zoom is specified, choose a zoom level that will fit all the markers and the path

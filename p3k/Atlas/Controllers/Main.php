@@ -20,7 +20,14 @@ class Main {
 
   public static function mapImage(App $app, $params) {
     $assetPath = $app->root() . '/public/map-images';
-    $image = \p3k\geo\StaticMap\render($params, $assetPath, $app->isAuthenticated($params));
+    try {
+      $image = \p3k\geo\StaticMap\render($params, $assetPath, $app->isAuthenticated($params));
+    } catch(\InvalidArgumentException $e) {
+      return Response::json([
+        'error' => 'invalid_request',
+        'error_description' => $e->getMessage()
+      ], 400);
+    }
     return Response::image($image['data'], $image['contentType']);
   }
 
