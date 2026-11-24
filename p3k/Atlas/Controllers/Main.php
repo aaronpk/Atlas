@@ -7,15 +7,15 @@ use p3k\Atlas\Response;
 class Main {
 
   public static function index(App $app, $params) {
-    return Response::html($app->view()->render('index'));
+    return Response::html($app->view()->render('index', ['nav' => 'home']));
   }
 
   public static function staticMaps(App $app, $params) {
-    return Response::html($app->view()->render('static-maps'));
+    return Response::html($app->view()->render('static-maps', ['title' => 'Static Maps API', 'nav' => 'static-maps']));
   }
 
   public static function map(App $app, $params) {
-    return Response::html($app->view()->render('map'));
+    return Response::html($app->view()->render('map', ['title' => 'Static Maps']));
   }
 
   public static function mapImage(App $app, $params) {
